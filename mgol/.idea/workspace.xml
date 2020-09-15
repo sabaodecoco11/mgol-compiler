@@ -4,6 +4,12 @@
     <list default="true" id="36548940-da54-45f1-aa76-8888961d4708" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/DFA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/DFA.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/LexicalAnalyzer.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/LexicalAnalyzer.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/ScannerUtils.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ScannerUtils.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/DFA.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/DFA.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,10 +19,36 @@
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="SBT">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -129,7 +161,7 @@
       <workItem from="1600169580864" duration="150000" />
       <workItem from="1600169899784" duration="124000" />
       <workItem from="1600170571706" duration="21534000" />
-      <workItem from="1600193583633" duration="2337000" />
+      <workItem from="1600193583633" duration="10802000" />
     </task>
     <servers />
   </component>
@@ -146,40 +178,60 @@
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state x="1820" y="206" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600173921652" />
-    <state width="1394" height="171" key="GridCell.Tab.0.bottom" timestamp="1600193391863">
-      <screen x="0" y="0" width="1366" height="768" />
+    <state width="1394" height="171" key="GridCell.Tab.0.bottom" timestamp="1600204469936">
+      <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state width="1394" height="171" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600191105948" />
+    <state width="1394" height="171" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
     <state width="1394" height="218" key="GridCell.Tab.0.bottom/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
-    <state width="1394" height="171" key="GridCell.Tab.0.center" timestamp="1600193391863">
-      <screen x="0" y="0" width="1366" height="768" />
+    <state width="1394" height="171" key="GridCell.Tab.0.center" timestamp="1600204469936">
+      <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state width="1394" height="171" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600191105948" />
+    <state width="1394" height="171" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
     <state width="1394" height="218" key="GridCell.Tab.0.center/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
-    <state width="1394" height="171" key="GridCell.Tab.0.left" timestamp="1600193391863">
-      <screen x="0" y="0" width="1366" height="768" />
+    <state width="1394" height="171" key="GridCell.Tab.0.left" timestamp="1600204469936">
+      <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state width="1394" height="171" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600191105948" />
+    <state width="1394" height="171" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
     <state width="1394" height="218" key="GridCell.Tab.0.left/0.0.1440.870@0.0.1440.870" timestamp="1598969304951" />
-    <state width="1394" height="171" key="GridCell.Tab.0.right" timestamp="1600193391863">
-      <screen x="0" y="0" width="1366" height="768" />
+    <state width="1394" height="171" key="GridCell.Tab.0.right" timestamp="1600204469936">
+      <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state width="1394" height="171" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600191105948" />
+    <state width="1394" height="171" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
     <state width="1394" height="218" key="GridCell.Tab.0.right/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
+    <state width="1394" height="282" key="GridCell.Tab.1.bottom" timestamp="1600203593300">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1394" height="282" key="GridCell.Tab.1.bottom/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600203593300" />
+    <state width="1394" height="282" key="GridCell.Tab.1.center" timestamp="1600203593300">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1394" height="282" key="GridCell.Tab.1.center/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600203593300" />
+    <state width="1394" height="282" key="GridCell.Tab.1.left" timestamp="1600203593300">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1394" height="282" key="GridCell.Tab.1.left/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600203593300" />
+    <state width="1394" height="282" key="GridCell.Tab.1.right" timestamp="1600203593300">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1394" height="282" key="GridCell.Tab.1.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600203593300" />
     <state x="1767" y="270" key="com.intellij.ide.util.TipDialog" timestamp="1600169901054">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state x="380" y="230" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599150759389" />
     <state x="1767" y="270" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600169901054" />
     <state x="401" y="261" key="com.intellij.ide.util.TipDialog/0.0.1440.870@0.0.1440.870" timestamp="1598969087818" />
-    <state x="1750" y="202" key="run.anything.popup" timestamp="1600194820347">
+    <state x="1740" y="66" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1600196408173">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state x="1750" y="202" key="run.anything.popup/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600194820347" />
+    <state x="1740" y="66" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600196408173" />
+    <state x="1750" y="202" key="run.anything.popup" timestamp="1600198634317">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state x="1750" y="202" key="run.anything.popup/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600198634317" />
     <state x="384" y="195" key="run.anything.popup/0.0.1440.870@0.0.1440.870" timestamp="1598912887533" />
   </component>
 </project>

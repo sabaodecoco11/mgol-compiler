@@ -17,7 +17,7 @@ object LexicalAnalyzer extends App{
 
   }catch{
     case e:
-        FileNotFoundException => println("Falha ao abrir arquivo...");
+        Exception => println(e.getMessage)
   }
 
 
