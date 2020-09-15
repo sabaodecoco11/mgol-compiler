@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="36548940-da54-45f1-aa76-8888961d4708" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1gsll0GNLm6cSko6GkuBZpaWJGu" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="Application.LexicalAnalyzer">
+    <configuration name="Hello" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Hello" />
+      <module name="mgol_compiladores" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LexicalAnalyzer" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="LexicalAnalyzer" />
+      <module name="mgol_compiladores" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="mgol_compiladores" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
+      <module name="mgol_compiladores" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.LexicalAnalyzer" />
+        <item itemvalue="Application.Hello" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SbtLocalSettings">
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="testing" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="testing-app [file:/home/sabaodecoco/scala_testing/testing%20app/]" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value="testing-build" />
+                <option name="path" value="$PROJECT_DIR$/project" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$" value="3197822655266" />
+        <entry key="$PROJECT_DIR$/build.sbt" value="1108034006" />
+        <entry key="$PROJECT_DIR$/project/build.properties" value="87871327" />
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$" value="RE_IMPORT" />
+      </map>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="36548940-da54-45f1-aa76-8888961d4708" name="Default Changelist" comment="" />
+      <created>1598911327423</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1598911327423</updated>
+      <workItem from="1598911330992" duration="3925000" />
+      <workItem from="1598969087853" duration="964000" />
+      <workItem from="1598981626692" duration="7000" />
+      <workItem from="1599076369023" duration="5236000" />
+      <workItem from="1599139384289" duration="4000" />
+      <workItem from="1599150760080" duration="1565000" />
+      <workItem from="1599165535508" duration="4389000" />
+      <workItem from="1599564973336" duration="107000" />
+      <workItem from="1600169580864" duration="150000" />
+      <workItem from="1600169899784" duration="124000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1682" y="98" key="#Project_Structure" timestamp="1600170018525">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state x="1682" y="98" key="#Project_Structure/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600170018525" />
+    <state x="316" y="95" key="#Project_Structure/0.0.1440.870@0.0.1440.870" timestamp="1598911933221" />
+    <state width="1394" height="171" key="GridCell.Tab.0.bottom" timestamp="1600170023779">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1320" height="172" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599151429710" />
+    <state width="1394" height="171" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600170023779" />
+    <state width="1394" height="218" key="GridCell.Tab.0.bottom/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
+    <state width="1394" height="171" key="GridCell.Tab.0.center" timestamp="1600170023779">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1320" height="172" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599151429710" />
+    <state width="1394" height="171" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600170023779" />
+    <state width="1394" height="218" key="GridCell.Tab.0.center/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
+    <state width="1394" height="171" key="GridCell.Tab.0.left" timestamp="1600170023778">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1320" height="172" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599151429710" />
+    <state width="1394" height="171" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600170023778" />
+    <state width="1394" height="218" key="GridCell.Tab.0.left/0.0.1440.870@0.0.1440.870" timestamp="1598969304951" />
+    <state width="1394" height="171" key="GridCell.Tab.0.right" timestamp="1600170023779">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state width="1320" height="172" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599151429710" />
+    <state width="1394" height="171" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600170023779" />
+    <state width="1394" height="218" key="GridCell.Tab.0.right/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
+    <state x="1767" y="270" key="com.intellij.ide.util.TipDialog" timestamp="1600169901054">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state x="380" y="230" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599150759389" />
+    <state x="1767" y="270" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600169901054" />
+    <state x="401" y="261" key="com.intellij.ide.util.TipDialog/0.0.1440.870@0.0.1440.870" timestamp="1598969087818" />
+    <state x="384" y="195" key="run.anything.popup" timestamp="1598912887533">
+      <screen x="0" y="0" width="1440" height="870" />
+    </state>
+    <state x="384" y="195" key="run.anything.popup/0.0.1440.870@0.0.1440.870" timestamp="1598912887533" />
+  </component>
+</project>
