@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="36548940-da54-45f1-aa76-8888961d4708" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/LexicalAnalyzer.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/LexicalAnalyzer.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$delayedInit$body.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$delayedInit$body.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/DFA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/DFA.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +129,7 @@
       <workItem from="1600169580864" duration="150000" />
       <workItem from="1600169899784" duration="124000" />
       <workItem from="1600170571706" duration="21534000" />
-      <workItem from="1600193583633" duration="45000" />
+      <workItem from="1600193583633" duration="2337000" />
     </task>
     <servers />
   </component>
@@ -179,9 +176,10 @@
     <state x="380" y="230" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599150759389" />
     <state x="1767" y="270" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600169901054" />
     <state x="401" y="261" key="com.intellij.ide.util.TipDialog/0.0.1440.870@0.0.1440.870" timestamp="1598969087818" />
-    <state x="384" y="195" key="run.anything.popup" timestamp="1598912887533">
-      <screen x="0" y="0" width="1440" height="870" />
+    <state x="1750" y="202" key="run.anything.popup" timestamp="1600194820347">
+      <screen x="1366" y="0" width="1440" height="900" />
     </state>
+    <state x="1750" y="202" key="run.anything.popup/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600194820347" />
     <state x="384" y="195" key="run.anything.popup/0.0.1440.870@0.0.1440.870" timestamp="1598912887533" />
   </component>
 </project>
