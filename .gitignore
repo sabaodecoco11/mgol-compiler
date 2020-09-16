@@ -1,8 +1,8 @@
-mgol/target
-mgol/target/***
-mgol/.idea/
-mgol/.idea/*
-mgol/.idea/**
+target
+target/***
+.idea/
+.idea/*
+.idea/**
 target/
 
 .directory
@@ -14,38 +14,38 @@ target/
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-mgol/.idea/**/workspace.xml
-mgol/.idea/**/tasks.xml
-mgol/.idea/**/usage.statistics.xml
-mgol/.idea/**/dictionaries
-mgol/.idea/**/shelf
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
 
 # Generated files
-mgol/.idea/**/contentModel.xml
+.idea/**/contentModel.xml
 
 # Sensitive or high-churn files
-mgol/.idea/**/dataSources/
-mgol/.idea/**/dataSources.ids
-mgol/.idea/**/dataSources.local.xml
-mgol/.idea/**/sqlDataSources.xml
-mgol/.idea/**/dynamic.xml
-mgol/.idea/**/uiDesigner.xml
-mgol/.idea/**/dbnavigator.xml
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
 
 # Gradle
-mgol/.idea/**/gradle.xml
-mgol/.idea/**/libraries
+.idea/**/gradle.xml
+.idea/**/libraries
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# mgol/.idea/artifacts
-# mgol/.idea/compiler.xml
-# mgol/.idea/jarRepositories.xml
-# mgol/.idea/modules.xml
-# mgol/.idea/*.iml
-# mgol/.idea/modules
+# .idea/artifacts
+# .idea/compiler.xml
+# .idea/jarRepositories.xml
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
 # *.iml
 # *.ipr
 
@@ -53,7 +53,7 @@ mgol/.idea/**/libraries
 cmake-build-*/
 
 # Mongo Explorer plugin
-mgol/.idea/**/mongoSettings.xml
+.idea/**/mongoSettings.xml
 
 # File-based project format
 *.iws
@@ -62,13 +62,13 @@ mgol/.idea/**/mongoSettings.xml
 out/
 
 # mpeltonen/sbt-idea plugin
-mgol/.idea_modules/
+.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
 
 # Cursive Clojure plugin
-mgol/.idea/replstate.xml
+.idea/replstate.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
@@ -77,41 +77,41 @@ crashlytics-build.properties
 fabric.properties
 
 # Editor-based Rest Client
-mgol/.idea/httpRequests
+.idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
-mgol/.idea/caches/build_file_checksums.ser
+.idea/caches/build_file_checksums.ser
 
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
 # *.iml
 # modules.xml
-# mgol/.idea/misc.xml
+# .idea/misc.xml
 # *.ipr
 
-mgol/.idea
+.idea
 
 # Sonarlint plugin
 # https://plugins.jetbrains.com/plugin/7973-sonarlint
-mgol/.idea/**/sonarlint/
+.idea/**/sonarlint/
 
 # SonarQube Plugin
 # https://plugins.jetbrains.com/plugin/7238-sonarqube-community-plugin
-mgol/.idea/**/sonarIssues.xml
+.idea/**/sonarIssues.xml
 
 # Markdown Navigator plugin
 # https://plugins.jetbrains.com/plugin/7896-markdown-navigator-enhanced
-mgol/.idea/**/markdown-navigator.xml
-mgol/.idea/**/markdown-navigator-enh.xml
-mgol/.idea/**/markdown-navigator/
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator-enh.xml
+.idea/**/markdown-navigator/
 
 # Cache file creation bug
 # See https://youtrack.jetbrains.com/issue/JBR-2257
-mgol/.idea/$CACHE_FILE$
+.idea/$CACHE_FILE$
 
 # CodeStream plugin
 # https://plugins.jetbrains.com/plugin/12206-codestream
-mgol/.idea/codestream.xml
+.idea/codestream.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij
