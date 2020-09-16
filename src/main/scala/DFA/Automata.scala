@@ -4,6 +4,7 @@ import Enum.Token.Token
 import Enum.{Action, CharPattern, Token}
 
 import scala.collection.immutable.HashMap
+import scala.runtime.Nothing$
 
 class Automata {
 
@@ -146,23 +147,7 @@ class Automata {
     return this.automataTransitionTable(state)(classification)
   }
 
-  def getTokenByState(state: Int): Token = {
-    state match{
-      case 1 => Token.OP_PARENTHESIS
-      case 2 => Token.CL_PARENTHESIS
-      case 3 => Token.SEMICOLON
-      case 4 => Token.ID
-      case 5 => Token.NUMBER
-      case 8 =>Token.NUMBER
-      case 9 => Token.NUMBER
-      case 11 => Token.COMMENT
-      case 13 => Token.LITERAL
-      case 14 => Token.MATH_OPERATOR
-      case 15 => Token.REL_OPERATOR
-      case 16 => Token.REL_OPERATOR
-      case 20 => Token.ATTR
-      case 22 => Token.END_OF_FILE
-    }
-  }
+
+
 
 }

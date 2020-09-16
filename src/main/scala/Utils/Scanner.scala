@@ -1,7 +1,9 @@
 package Utils
 
 import DFA.Automata
-import Enum.CharPattern
+import Enum.Token.Token
+import Enum.{CharPattern, Token}
+
 
 import scala.annotation.tailrec
 
@@ -10,7 +12,6 @@ object Scanner {
 
   private val wordRangeRangeList = ('a' to 'z').concat('A' to 'Z').toList
   private val numberRangeRangeList = ('0' to '9').toList
-  private val logicalRangeList = ('<' to '>').toList
   private val ignoredRangeList = List(' ', ';', '\n', '\t')
 
   @tailrec
@@ -27,56 +28,72 @@ object Scanner {
     }
   }
 
-  def doSomethingWithThemChars(str: String, i: Int): Unit ={
-    var estadoAnterior = 0;
-    var estadoPosterior = 0;
+  def doSomethingWithThemChars(str: String, line: Int): Unit ={
+    var previousState = 0;
+    var nextState = 0;
 
-    var token = ""
+    var col = 1
+
+    var tokenStr = ""
 
     str.foreach(c => {
       val charGroup: String = getCharGroup(c) //classifica o tipo do caractere
 
-      estadoAnterior = estadoPosterior
-      estadoPosterior = dfa.automataProcessing(charGroup, estadoPosterior)
+      previousState = nextState
+      nextState = dfa.automataProcessing(charGroup, nextState)
 
-      if(estadoPosterior > 0)// li um caractere que não é ignorado ou incorreto, logo deve ser concatenado ao token
-        token += c
+      if(nextState > 0)// li um caractere que não é ignorado ou incorreto, logo deve ser concatenado ao token
+        tokenStr += c
 
-      if(estadoPosterior.equals(-1)){//o caractere atual não foi reconhecido no estado passado, trate-o
-        if(dfa.acceptedStates.contains(estadoAnterior)){//se o estado passado for de aceitação, insira o token
-          println(token)
-          token = ""
+      if(nextState.equals(-1)){//o caractere atual não foi reconhecido no estado passado, trate-o
+        if(dfa.acceptedStates.contains(previousState)){//se o estado passado for de aceitação, insira o token
+          val token = getTokenByState(previousState)
+
+          if(token.equals(Token.ID)) {
+            //TODO: inserir token na tabela de símbolos, se já não estiver lá
+          }
+
+
+          tokenStr = ""
         }
 
-        estadoAnterior = 0;//reinicie o estado para verificar se o caractere pertence à linguagem
-        estadoPosterior = dfa.automataProcessing(charGroup, 0)
+        nextState = dfa.automataProcessing(charGroup, 0)//reinicie o estado para verificar se o caractere pertence à linguagem
 
         //se o caractere é válido e de aceitação, insira-o no token
-        if(estadoPosterior > 0 && dfa.acceptedStates.contains(estadoPosterior)){
-          token += c
+        if(nextState > 0 && dfa.acceptedStates.contains(nextState)){
+          tokenStr += c
         }
 
-        if(estadoPosterior.equals(-2)){
-          throw new Exception("ERRO!");
-        }
       }
+
+      if(nextState.equals(-2)){
+        println("\n[Erro] no caractere: " + c + "\nlinha: " + line + " coluna " + col + "\n");
+        nextState = 0 //conforme requisito, se for obtido erro, o estado inicial deve ser retornado!
+      }
+      col = col + 1
     })
   }
-
-
-//  @tailrec
-//  def doSomethingWithThemChars(x:String, linha: Int, strSize: Int) : Unit= {
-//    if(strSize > 0){
-//      val c = x.charAt(0)
-//
-//
-//    }
-//
-//    return doSomethingWithThemChars(x.drop(0), linha, x.size-1)
-//  }
-
-
-
+  
+  def getTokenByState(state: Int): Token = {
+    state match {
+      case 1 => Token.OP_PARENTHESIS
+      case 2 => Token.CL_PARENTHESIS
+      case 3 => Token.SEMICOLON
+      case 4 => Token.ID
+      case 5 => Token.NUMBER
+      case 8 => Token.NUMBER
+      case 9 => Token.NUMBER
+      case 11 => Token.COMMENT
+      case 13 => Token.LITERAL
+      case 14 => Token.MATH_OPERATOR
+      case 15 => Token.REL_OPERATOR
+      case 16 => Token.REL_OPERATOR
+      case 17 => Token.REL_OPERATOR
+      case 20 => Token.ATTR
+      case 22 => Token.END_OF_FILE
+      case 0 => None.get
+    }
+  }
 
   private def getCharGroup(c: Char): String = {
     if(wordRangeRangeList.contains(c))
@@ -84,8 +101,6 @@ object Scanner {
     else if(ignoredRangeList.contains(c))
       CharPattern.IGNORED
     else if(numberRangeRangeList.contains(c))
-      CharPattern.NUMERIC
-    else if(logicalRangeList.contains())
       CharPattern.NUMERIC
 
     else if(c.equals('\n'))
