@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36548940-da54-45f1-aa76-8888961d4708" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/scala/DFA/Automata.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/DFA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/DFA.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/DFA.scala" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/LexicalAnalyzer.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/LexicalAnalyzer.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/ScannerUtils.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ScannerUtils.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/DFA.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/DFA.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/ScannerUtils.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/DFA.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$delayedInit$body.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer$delayedInit$body.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/LexicalAnalyzer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/ScannerUtils.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +54,9 @@
       </state>
     </system>
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="testing" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -79,6 +86,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunManager" selected="Application.LexicalAnalyzer">
     <configuration name="Hello" type="Application" factoryName="Application" temporary="true">
@@ -162,6 +170,11 @@
       <workItem from="1600169899784" duration="124000" />
       <workItem from="1600170571706" duration="21534000" />
       <workItem from="1600193583633" duration="10802000" />
+      <workItem from="1600207868032" duration="5369000" />
+      <workItem from="1600254012490" duration="4070000" />
+      <workItem from="1600258222923" duration="3000" />
+      <workItem from="1600269307712" duration="807000" />
+      <workItem from="1600274797684" duration="8029000" />
     </task>
     <servers />
   </component>
@@ -174,33 +187,33 @@
     </state>
     <state x="1682" y="98" key="#Project_Structure/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600170018525" />
     <state x="316" y="95" key="#Project_Structure/0.0.1440.870@0.0.1440.870" timestamp="1598911933221" />
-    <state x="1820" y="206" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1600173921652">
+    <state x="1820" y="206" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1600276369627">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state x="1820" y="206" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600173921652" />
-    <state width="1394" height="171" key="GridCell.Tab.0.bottom" timestamp="1600204469936">
+    <state x="1820" y="206" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600276369627" />
+    <state width="1394" height="163" key="GridCell.Tab.0.bottom" timestamp="1600282466004">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state width="1394" height="171" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
+    <state width="1394" height="163" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600274921401" />
+    <state width="1394" height="163" key="GridCell.Tab.0.bottom/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600282466004" />
     <state width="1394" height="218" key="GridCell.Tab.0.bottom/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
-    <state width="1394" height="171" key="GridCell.Tab.0.center" timestamp="1600204469936">
+    <state width="1394" height="163" key="GridCell.Tab.0.center" timestamp="1600282466004">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state width="1394" height="171" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
+    <state width="1394" height="163" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600274921401" />
+    <state width="1394" height="163" key="GridCell.Tab.0.center/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600282466004" />
     <state width="1394" height="218" key="GridCell.Tab.0.center/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
-    <state width="1394" height="171" key="GridCell.Tab.0.left" timestamp="1600204469936">
+    <state width="1394" height="163" key="GridCell.Tab.0.left" timestamp="1600282466004">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state width="1394" height="171" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
+    <state width="1394" height="163" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600274921401" />
+    <state width="1394" height="163" key="GridCell.Tab.0.left/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600282466004" />
     <state width="1394" height="218" key="GridCell.Tab.0.left/0.0.1440.870@0.0.1440.870" timestamp="1598969304951" />
-    <state width="1394" height="171" key="GridCell.Tab.0.right" timestamp="1600204469936">
+    <state width="1394" height="163" key="GridCell.Tab.0.right" timestamp="1600282466004">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state width="1394" height="171" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600193391863" />
-    <state width="1394" height="171" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600204469936" />
+    <state width="1394" height="163" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600274921401" />
+    <state width="1394" height="163" key="GridCell.Tab.0.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600282466004" />
     <state width="1394" height="218" key="GridCell.Tab.0.right/0.0.1440.870@0.0.1440.870" timestamp="1598969304952" />
     <state width="1394" height="282" key="GridCell.Tab.1.bottom" timestamp="1600203593300">
       <screen x="1366" y="0" width="1440" height="900" />
@@ -218,16 +231,24 @@
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state width="1394" height="282" key="GridCell.Tab.1.right/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600203593300" />
-    <state x="1767" y="270" key="com.intellij.ide.util.TipDialog" timestamp="1600169901054">
+    <state x="1686" y="121" key="SettingsEditor" timestamp="1600275107657">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
-    <state x="380" y="230" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1599150759389" />
-    <state x="1767" y="270" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600169901054" />
+    <state x="1686" y="121" key="SettingsEditor/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600275107657" />
+    <state x="1767" y="270" key="com.intellij.ide.util.TipDialog" timestamp="1600258222649">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state x="380" y="230" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@0.0.1366.768" timestamp="1600207872704" />
+    <state x="1767" y="270" key="com.intellij.ide.util.TipDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600258222649" />
     <state x="401" y="261" key="com.intellij.ide.util.TipDialog/0.0.1440.870@0.0.1440.870" timestamp="1598969087818" />
     <state x="1740" y="66" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1600196408173">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>
     <state x="1740" y="66" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600196408173" />
+    <state x="1948" y="360" width="710" height="304" key="org.intellij.images.editor.actions.BackgroundImageDialog" timestamp="1600275033734">
+      <screen x="1366" y="0" width="1440" height="900" />
+    </state>
+    <state x="1948" y="360" width="710" height="304" key="org.intellij.images.editor.actions.BackgroundImageDialog/0.0.1366.768/1366.0.1440.900@1366.0.1440.900" timestamp="1600275033734" />
     <state x="1750" y="202" key="run.anything.popup" timestamp="1600198634317">
       <screen x="1366" y="0" width="1440" height="900" />
     </state>

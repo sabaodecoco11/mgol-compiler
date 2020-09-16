@@ -1,19 +1,25 @@
 import java.io.FileNotFoundException
 
+import Utils.Scanner
+
 import scala.io.Source
-import ScannerUtils.begin;
+
 
 object LexicalAnalyzer extends App{
 
   //arquivo inicial para testes...
   val filePath = "/home/sabaodecoco/estudos/compiladores/testeCompiladores"
 
-  val myDfa = new DFA
 
   try {
-    val fileSource: Source = Source.fromFile(filePath);
+    val fileSource: Source = Source.fromFile(filePath)
+    val init = System.currentTimeMillis();
 
-    ScannerUtils.begin(fileSource.getLines(), 0);
+    Scanner.begin(fileSource.getLines(), 0)
+
+    val exit = System.currentTimeMillis();
+
+    println("\nExecution time: " + (exit - init) + "ms")
 
   }catch{
     case e:
