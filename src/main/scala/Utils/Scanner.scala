@@ -1,9 +1,9 @@
 package Utils
 
 import DFA.Automata
+import Enum.CharPattern.CharPattern
 import Enum.Token.Token
 import Enum.{CharPattern, Token}
-
 
 import scala.annotation.tailrec
 
@@ -12,7 +12,7 @@ object Scanner {
 
   private val wordRangeRangeList = ('a' to 'z').concat('A' to 'Z').toList
   private val numberRangeRangeList = ('0' to '9').toList
-  private val ignoredRangeList = List(' ', ';', '\n', '\t')
+  private val ignoredRangeList = List(' ', '\n', '\t')
 
   @tailrec
   def begin(lines: Iterator[String], linePosition: Int): Unit= {
@@ -42,11 +42,17 @@ object Scanner {
       previousState = nextState
       nextState = dfa.automataProcessing(charGroup, nextState)
 
-      if(nextState > 0)// li um caractere que não é ignorado ou incorreto, logo deve ser concatenado ao token
+      //caractere que não é ignorado ou incorreto, logo deve ser concatenado ao token
+      if(nextState > 0)
         tokenStr += c
 
-      if(nextState.equals(-1)){//o caractere atual não foi reconhecido no estado passado, trate-o
-        if(dfa.acceptedStates.contains(previousState)){//se o estado passado for de aceitação, insira o token
+      //o caractere atual não foi reconhecido no estado passado, trate-o
+      if(nextState.equals(-1)){
+        //se o estado passado for de aceitação, insira o token
+        if(dfa.rejectionStates.contains(previousState)){
+          println(c + " <- erro")
+        }
+        if(dfa.acceptedStates.contains(previousState)){
           val token = getTokenByState(previousState)
 
           if(token.equals(Token.ID)) {
@@ -68,13 +74,14 @@ object Scanner {
 
       if(nextState.equals(-2)){
         println("\n[Erro] no caractere: " + c + "\nlinha: " + line + " coluna " + col + "\n");
-        nextState = 0 //conforme requisito, se for obtido erro, o estado inicial deve ser retornado!
+        //conforme requisito, se for obtido erro, o estado inicial deve ser retornado!
+        nextState = 0
       }
       col = col + 1
     })
   }
   
-  def getTokenByState(state: Int): Token = {
+  private def getTokenByState(state: Int): Token = {
     state match {
       case 1 => Token.OP_PARENTHESIS
       case 2 => Token.CL_PARENTHESIS
@@ -95,9 +102,9 @@ object Scanner {
     }
   }
 
-  private def getCharGroup(c: Char): String = {
+  private def getCharGroup(c: Char): CharPattern = {
     if(wordRangeRangeList.contains(c))
-      CharPattern.LETTER
+      c.toLower.toString
     else if(ignoredRangeList.contains(c))
       CharPattern.IGNORED
     else if(numberRangeRangeList.contains(c))
@@ -106,7 +113,8 @@ object Scanner {
     else if(c.equals('\n'))
       "\n"
 
-    else // retorna o próprio caractére
+    // retorna o próprio caractere
+    else
       c.toString
   }
 
