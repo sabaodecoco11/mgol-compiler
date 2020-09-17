@@ -60,7 +60,7 @@ object Scanner {
         nextState = dfa.automataProcessing(charGroup, 0)//reinicie o estado para verificar se o caractere pertence à linguagem
 
         //se o caractere é válido e de aceitação, insira-o no token
-        if(nextState > 0 && dfa.acceptedStates.contains(nextState)){
+        if(nextState > 0){
           tokenStr += c
         }
 
