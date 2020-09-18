@@ -6,5 +6,4 @@ object CharPattern extends Enumeration {
   val LOGICAL = "logical"
   val NUMERIC = "number"
   val LETTER = "letter"
-  val IGNORED = "ignored"
 }

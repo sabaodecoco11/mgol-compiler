@@ -1,6 +1,6 @@
 package Enum
 
-object Action extends Enumeration {
+object AutomataAction extends Enumeration {
   type ActionOverAutomata = Int
 
   val INITIAL_STATE = 0;

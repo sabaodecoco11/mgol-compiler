@@ -28,8 +28,6 @@ object Token extends Enumeration {
   val R_ID_INT = "inteiro"
   val R_ID_LIT = "lit"
   val R_ID_REAL = "real"
-  val R_ID_END = "fim"
-
-
+  val R_END = "fim"
 
 }
