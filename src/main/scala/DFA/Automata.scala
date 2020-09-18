@@ -3,7 +3,8 @@ package DFA
 
 import Enum.CharPattern.CharPattern
 import Enum.Token.Token
-import Enum.{AutomataAction, CharPattern, Token}
+import Enum.{AutomataAction, CharPattern, D_Type, Token}
+import Utils.Common.SymbolTable
 
 import scala.annotation.tailrec
 
@@ -173,10 +174,12 @@ object Automata {
   }
 
   @tailrec
-  final def processing(str:String, strPos: Int, strSize: Int, line: Int, previousState: Int, lex: String): Unit = {
+  final def processing(str:String,
+                       strPos: Int, strSize: Int,
+                       line: Int, previousState: Int, lex: String, symbolTable: SymbolTable): SymbolTable = {
     //caso base
     if(strPos >= strSize )
-      return
+      return symbolTable
 
     val c = str.charAt(strPos)
     val charGroup = getCharGroup(c)
@@ -185,24 +188,38 @@ object Automata {
 
     //leu caractere ignorado...
     if(nextState.equals(AutomataAction.INITIAL_STATE))
-      processing(str, strPos + 1, strSize, line, 0, lex)
+      processing(str, strPos + 1, strSize, line, 0, lex, symbolTable)
 
     //transição ok
     else if(nextState > AutomataAction.INITIAL_STATE)
-      processing(str, strPos + 1, strSize, line, nextState, lex + c)
+      processing(str, strPos + 1, strSize, line, nextState, lex + c, symbolTable)
 
     //transitou para caractere que não estava na função de transição
     else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
-      if(!this.acceptedStates(previousState).isEmpty){
-        println(lex)
-      }
-      processing(str, strPos, strSize, line, 0, "")
+        if(acceptedStates.contains(previousState)){
+          val tkn = acceptedStates(previousState)
+
+          val symblT = {
+            if(tkn.equals(Token.ID) && symbolTable.contains(lex)) {
+              println("( " + symbolTable(lex)._1 + ", " + lex  + ", " + symbolTable(lex)._2 + " )" )
+              symbolTable
+            }
+            else{
+              println("( " + tkn + ", " + lex  + ", " + getTypeByState(previousState) + " )" )
+              symbolTable + (lex -> (tkn, getTypeByState(previousState)) )
+            }
+          }
+
+          processing(str, strPos, strSize, line, 0, "", symblT)
+        }
+        else
+          processing(str, strPos, strSize, line, 0, "", symbolTable)
     }
 
     //caractere nao existe no alfabeto...
-    else if(nextState.equals(AutomataAction.SYMBOL_NOT_FOUND)){
+    else{
       println("[ERRO] -> Caracterece: " + c + " linha: " + line + " coluna: " + strPos )
-      processing(str, strPos+1, strSize, line, 0, "")
+      processing(str, strPos+1, strSize, line, 0, "", symbolTable)
     }
 
   }
@@ -219,6 +236,15 @@ object Automata {
     // retorna o próprio caractere
     else
     c.toString
+  }
+
+  private def getTypeByState(state: Int): String= {
+    state match {
+      case 5 => D_Type.INTEGER
+      case 8 => D_Type.REAL
+      case 9 => D_Type.REAL
+      case _ => ""
+    }
   }
 
 

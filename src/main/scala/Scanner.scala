@@ -16,7 +16,7 @@ object Scanner {
       //é necessário concatenar \n, pois next() a remove da String
       val line = lines.next() + "\n"
 
-      Automata.processing(line, 0, line.size, linePosition, 0, "")
+      Automata.processing(line, 0, line.size, linePosition, 0, "", Utils.Common.getSymbolTable())
 
       //chama o processamento da próxima linha
       begin(lines.drop(0), linePosition + 1);
