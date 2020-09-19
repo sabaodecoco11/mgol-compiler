@@ -199,19 +199,24 @@ object Automata {
         if(acceptedStates.contains(previousState)){
           val tkn = acceptedStates(previousState)
 
-          val symblT = {
+          lazy val symblT = {
             if(tkn.equals(Token.ID) && symbolTable.contains(lex)) {
               println("( " + symbolTable(lex)._1 + ", " + lex  + ", " + symbolTable(lex)._2 + " )" )
               symbolTable
             }
             else{
               println("( " + tkn + ", " + lex  + ", " + getTypeByState(previousState) + " )" )
-              symbolTable + (lex -> (tkn, getTypeByState(previousState)) )
+              if(tkn.equals(Token.ID))
+                symbolTable + (lex -> (tkn, getTypeByState(previousState)) )
+              else
+                symbolTable
             }
           }
 
           processing(str, strPos, strSize, line, 0, "", symblT)
         }
+
+        // não é estado de transição...
         else
           processing(str, strPos, strSize, line, 0, "", symbolTable)
     }

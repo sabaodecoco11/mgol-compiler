@@ -10,7 +10,7 @@ object Compiler extends App{
     val fileSource: Source = Source.fromFile(filePath)
     val init = System.currentTimeMillis();
 
-    Scanner.begin(fileSource.getLines(), 0)
+    val symbolTable = Scanner.begin(fileSource.getLines(), 0, Utils.Common.getSymbolTable())
 
     val exit = System.currentTimeMillis();
 

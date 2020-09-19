@@ -1,6 +1,5 @@
 import DFA.Automata
-import Enum.CharPattern
-import Enum.CharPattern.CharPattern
+import Utils.Common.SymbolTable
 
 import scala.annotation.tailrec
 
@@ -10,17 +9,20 @@ object Scanner {
 
 
   @tailrec
-  def begin(lines: Iterator[String], linePosition: Int): Unit= {
-    if(lines.hasNext){
+  def begin(lines: Iterator[String], linePosition: Int, symbolTable: SymbolTable): SymbolTable= {
+    if(lines.hasNext) {
 
       //é necessário concatenar \n, pois next() a remove da String
       val line = lines.next() + "\n"
 
-      Automata.processing(line, 0, line.size, linePosition, 0, "", Utils.Common.getSymbolTable())
+      val symbolT: SymbolTable =
+        Automata.processing(line, 0, line.size, linePosition, 0, "", symbolTable)
 
       //chama o processamento da próxima linha
-      begin(lines.drop(0), linePosition + 1);
+      begin(lines.drop(0), linePosition + 1, symbolTable ++ symbolT);
     }
+    else
+      symbolTable
   }
 
 
