@@ -12,7 +12,7 @@ import scala.annotation.tailrec
 object Automata {
   private val wordRangeRangeList = ('a' to 'z').concat('A' to 'Z').toList
   private val numberRangeRangeList = ('0' to '9').toList
-  private val ignoredRangeList = List(' ', '\n', '\t')
+  private val ignoredRangeList = List(' ', '\n', '\t', ';')
 
   private val acceptedStates: Map[Int, Token] = Map[Int, Token](
     1 -> Token.OP_PARENTHESIS,
@@ -24,7 +24,11 @@ object Automata {
     20 -> Token.ATTR,
     22 -> Token.END_OF_FILE).withDefaultValue("")
 
-  val rejectionStates = List(6, 7, 81, 10, 12)
+  val rejectionStates: Map[Int, String] = Map[Int, Token](
+    6 -> Token.NUMBER,
+    7 -> Token.NUMBER,
+    81 -> Token.NUMBER,
+    10 -> Token.COMMENT, 12-> Token.LITERAL)
 
   private val automataTransitionTable: Map[Int, Map[String, Int]] = Map(
     //state 0
@@ -41,11 +45,10 @@ object Automata {
         CharPattern.NUMERIC -> 5, // qualquer dígito
         "{" -> 10,
         "\"" -> 12,
-        "+" -> 14, "-" -> 14, "/" -> 14, "*" -> 14, "-" -> 14,
+        "+" -> 14, "-" -> 14, "/" -> 14, "*" -> 14,
          ">" -> 16,
         "<" -> 15,
         "=" -> 17,
-        "-" -> 20,
         "eof" -> 22
     ).withDefaultValue(AutomataAction.SYMBOL_NOT_FOUND),
 
@@ -186,48 +189,59 @@ object Automata {
 
     val nextState = this.getNextState(charGroup, previousState)
 
-    //leu caractere ignorado...
+      //leu caractere ignorado...
     if(nextState.equals(AutomataAction.INITIAL_STATE))
-      processing(str, strPos + 1, strSize, line, 0, lex, symbolTable)
+        processing(str, strPos + 1, strSize, line, 0, lex, symbolTable)
 
-    //transição ok
-    else if(nextState > AutomataAction.INITIAL_STATE)
-      processing(str, strPos + 1, strSize, line, nextState, lex + c, symbolTable)
+      //transição ok
+      else if(nextState > AutomataAction.INITIAL_STATE)
+        processing(str, strPos + 1, strSize, line, nextState, lex + c, symbolTable)
 
-    //transitou para caractere que não estava na função de transição
-    else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
-        if(acceptedStates.contains(previousState)){
+      //transitou para caractere que não estava na função de transição
+      else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
+        //se o estado de anterior era de rejeição, então a formação do token não foi concluída... erro!
+        if(rejectionStates.contains(previousState)){
+          println("[ERRO de fechamento]" + " tipo: " + rejectionStates(previousState) +   " linha: " + line + " coluna: " + strPos )
+        }
+
+        val symbT = (typeByState:String) => {
           val tkn = acceptedStates(previousState)
 
-          lazy val symblT = {
+          //estado de aceitação
+          if(!tkn.isEmpty) {
             if(tkn.equals(Token.ID) && symbolTable.contains(lex)) {
               println("( " + symbolTable(lex)._1 + ", " + lex  + ", " + symbolTable(lex)._2 + " )" )
               symbolTable
             }
             else{
-              println("( " + tkn + ", " + lex  + ", " + getTypeByState(previousState) + " )" )
+              println("( " + tkn + ", " + lex  + ", " + typeByState + " )" )
               if(tkn.equals(Token.ID))
-                symbolTable + (lex -> (tkn, getTypeByState(previousState)) )
+                symbolTable + (lex -> (tkn, typeByState) )
               else
                 symbolTable
             }
           }
-
-          processing(str, strPos, strSize, line, 0, "", symblT)
+          else
+            symbolTable
         }
 
-        // não é estado de transição...
+        if(c.equals('\"')){
+          println("[ERRO de token irreconhecível] -> Caracterece: " + c + " linha: " + line + " coluna: " + strPos )
+          processing(str, strPos+1, strSize, line, 0, "", symbT(getTypeByState(previousState)))
+        }
+
         else
-          processing(str, strPos, strSize, line, 0, "", symbolTable)
+          processing(str, strPos, strSize, line, 0, "", symbT(getTypeByState(previousState)))
+
+      }
+
+      //caractere nao existe no alfabeto...
+      else{
+        println("[ERRO de símbolo inválido] -> Caracterece: " + c + " linha: " + line + " coluna: " + strPos )
+        processing(str, strPos+1, strSize, line, 0, "", symbolTable)
+      }
     }
 
-    //caractere nao existe no alfabeto...
-    else{
-      println("[ERRO] -> Caracterece: " + c + " linha: " + line + " coluna: " + strPos )
-      processing(str, strPos+1, strSize, line, 0, "", symbolTable)
-    }
-
-  }
 
   private def getCharGroup(c: Char): CharPattern = {
     if(wordRangeRangeList.contains(c))

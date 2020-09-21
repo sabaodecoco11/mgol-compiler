@@ -10,7 +10,7 @@ object Compiler extends App{
     val fileSource: Source = Source.fromFile(filePath)
     val init = System.currentTimeMillis();
 
-    val symbolTable = Scanner.begin(fileSource.getLines(), 0, Utils.Common.getSymbolTable())
+    val symbolTable = Scanner.begin(fileSource.getLines(), 1, Utils.Common.getSymbolTable())
 
     val exit = System.currentTimeMillis();
 
@@ -20,7 +20,7 @@ object Compiler extends App{
 
   }catch{
     case e:
-        Exception => println(e.getMessage)
+        Exception => println("Deu ruim " + e.getMessage)
   }
 
 
