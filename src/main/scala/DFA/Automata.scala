@@ -112,10 +112,11 @@ object Automata {
 
       "a" -> 10, "b" -> 10, "c" -> 10, "d" -> 10, "e" -> 10, "f" -> 10, "g" -> 10, "h" -> 10, "i" -> 10, "j" -> 10, "k" -> 10, //qualquer letra
       "l" -> 10, "m" -> 10, "n" -> 10, "o" -> 10, "p" -> 10, "q" -> 10, "r" -> 10, "s" -> 10, "t"-> 10, "u" -> 10, "v" -> 10,
-      "w" -> 10, "x" -> 10, "y" -> 10, "z" -> 10,
+      "w" -> 10, "x" -> 10, "y" -> 10, "z" -> 10, "\n" -> 10,
 
-      CharPattern.LOGICAL -> 10, "." -> 10, "*" -> 10, "+" -> 10,
-      "-" -> 10, "/" -> 10, "_" -> 10, "\\" -> 10, " " -> 10, ";" -> 10,  "\"" -> 10, ":" -> 10,
+      CharPattern.LOGICAL -> 10, "." -> 10, "*" -> 10, "+" -> 10, "(" -> 10, ")" -> 10, "+"-> 10, "-"-> 10, "="->10,
+      "<"->10,
+      "-" -> 10, "/" -> 10, "_" -> 10, "\\" -> 10, " " -> 10, ";" -> 10,  "\"" -> 10, ":" -> 10, "," -> 10,
       "}" -> 11
     ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
 
@@ -179,68 +180,69 @@ object Automata {
   @tailrec
   final def processing(str:String,
                        strPos: Int, strSize: Int,
-                       line: Int, previousState: Int, lex: String, symbolTable: SymbolTable): SymbolTable = {
+                       line: Int, previousState: Int, lex: String, symbolTable: SymbolTable, column: Int): SymbolTable = {
     //caso base
-    if(strPos >= strSize )
+    if(strPos >= strSize ) {
+      println("EOF")
       return symbolTable
+    }
 
-    val c = str.charAt(strPos)
-    val charGroup = getCharGroup(c)
+    val ch = str.charAt(strPos)
+    val charGroup = getCharGroup(ch)
 
     val nextState = this.getNextState(charGroup, previousState)
 
-      //leu caractere ignorado...
+    //para tratativa de erro!
+    val newLineCount: Int = if(ch.equals('\n')) line + 1 else line
+    val columnCount:Int = if(ch.equals('\n')) 0 else column
+
+    //leu caractere ignorado...
     if(nextState.equals(AutomataAction.INITIAL_STATE))
-        processing(str, strPos + 1, strSize, line, 0, lex, symbolTable)
+        processing(str, strPos + 1, strSize, newLineCount, 0, lex, symbolTable, columnCount+1)
 
-      //transição ok
-      else if(nextState > AutomataAction.INITIAL_STATE)
-        processing(str, strPos + 1, strSize, line, nextState, lex + c, symbolTable)
+    //transição ok
+    else if(nextState > AutomataAction.INITIAL_STATE)
+      processing(str, strPos + 1, strSize, newLineCount, nextState, lex + ch, symbolTable, columnCount+1)
 
-      //transitou para caractere que não estava na função de transição
-      else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
-        //se o estado de anterior era de rejeição, então a formação do token não foi concluída... erro!
-        if(rejectionStates.contains(previousState)){
-          println("[ERRO de fechamento]" + " tipo: " + rejectionStates(previousState) +   " linha: " + line + " coluna: " + strPos )
-        }
+    //transitou para caractere que não estava na função de transição
+    else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
 
-        val symbT = (typeByState:String) => {
-          val tkn = acceptedStates(previousState)
+      //se o estado de anterior era de rejeição, então a formação do token não foi concluída... erro!
+      if(rejectionStates.contains(previousState)){
+        println("[ERRO de fechamento]" + " tipo: " + rejectionStates(previousState) +   " linha: " + line + " coluna: " + column )
+      }
 
-          //estado de aceitação
-          if(!tkn.isEmpty) {
-            if(tkn.equals(Token.ID) && symbolTable.contains(lex)) {
-              println("( " + symbolTable(lex)._1 + ", " + lex  + ", " + symbolTable(lex)._2 + " )" )
-              symbolTable
-            }
-            else{
-              println("( " + tkn + ", " + lex  + ", " + typeByState + " )" )
-              if(tkn.equals(Token.ID))
-                symbolTable + (lex -> (tkn, typeByState) )
-              else
-                symbolTable
-            }
-          }
-          else
+      val newsymbT = (typeByState:String) => {
+        val tkn = acceptedStates(previousState)
+
+        //estado de aceitação
+        if(!tkn.isEmpty) {
+          if(tkn.equals(Token.ID) && symbolTable.contains(lex)) {
+            println("( " + symbolTable(lex)._1 + ", " + lex  + ", " + symbolTable(lex)._2 + " )" )
             symbolTable
+          }
+          else{
+            println("( " + tkn + ", " + lex  + ", " + typeByState + " )" )
+            if(tkn.equals(Token.ID))
+              symbolTable + (lex -> (tkn, typeByState) )
+            else
+              symbolTable
+          }
         }
-
-        if(c.equals('\"')){
-          println("[ERRO de token irreconhecível] -> Caracterece: " + c + " linha: " + line + " coluna: " + strPos )
-          processing(str, strPos+1, strSize, line, 0, "", symbT(getTypeByState(previousState)))
-        }
-
         else
-          processing(str, strPos, strSize, line, 0, "", symbT(getTypeByState(previousState)))
-
+          symbolTable
       }
 
-      //caractere nao existe no alfabeto...
-      else{
-        println("[ERRO de símbolo inválido] -> Caracterece: " + c + " linha: " + line + " coluna: " + strPos )
-        processing(str, strPos+1, strSize, line, 0, "", symbolTable)
-      }
+      //continua o processamento
+      processing(str, strPos, strSize, line, 0, "", newsymbT(getTypeByState(previousState)), columnCount)
     }
+
+    //caractere não existe no alfabeto...
+    else{
+      println("[ERRO de símbolo inválido] -> Caracterece: " + ch + " linha: " + line + " coluna: " + column )
+      processing(str, strPos+1, strSize, line, 0, "", symbolTable, columnCount+1)
+    }
+  }
 
 
   private def getCharGroup(c: Char): CharPattern = {
