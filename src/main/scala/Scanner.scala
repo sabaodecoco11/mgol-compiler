@@ -5,24 +5,24 @@ import scala.annotation.tailrec
 
 object Scanner {
 
-  def begin(lines: Iterator[String], symbolTable: SymbolTable, previousPos: Int): SymbolTable= {
-
-      val line = getStringFromLines(lines, "")
-
-      val symbolT: SymbolTable =
-        Automata.processing(line, 0, line.size,1, 0, "", symbolTable, 0)
-
-      return symbolT
-  }
-
   @tailrec
-  def getStringFromLines(lines: Iterator[String], str: String): String ={
-    if(lines.hasNext){
-       getStringFromLines(lines.drop(0), str + lines.next() + "\n" )
-    }
-    else
-      str + "eof"
-  }
+  def begin(content: String, strPos: Int, strSize: Int, line: Int, column: Int,  previousState: Int, lexeme: String, symbolTable: SymbolTable ): Unit= {
 
+      val lexemeInfo: Tuple5[SymbolTable, Int, Int, Int, Int] =
+        Automata.processing(content, strPos, content.size, line, previousState, "", column, symbolTable)
+
+      //passo base
+      if(lexemeInfo._1.contains("EOF")){
+        println("EOF")
+        return;
+      }
+
+      else{
+        println(lexemeInfo._1)
+        begin(content, lexemeInfo._2, content.size, lexemeInfo._4, lexemeInfo._5, lexemeInfo._3, "", symbolTable)
+      }
+
+
+  }
 
 }

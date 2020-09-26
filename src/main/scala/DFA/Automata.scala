@@ -7,6 +7,7 @@ import Enum.{AutomataAction, CharPattern, D_Type, Token}
 import Utils.Common.SymbolTable
 
 import scala.annotation.tailrec
+import scala.collection.immutable.HashMap
 
 
 object Automata {
@@ -180,11 +181,10 @@ object Automata {
   @tailrec
   final def processing(str:String,
                        strPos: Int, strSize: Int,
-                       line: Int, previousState: Int, lex: String, symbolTable: SymbolTable, column: Int): SymbolTable = {
+                       line: Int, previousState: Int, lex: String, column: Int, symbolTable: SymbolTable): Tuple5[SymbolTable, Int, Int, Int, Int] = {
     //caso base
     if(strPos >= strSize ) {
-      println("EOF")
-      return symbolTable
+      return (HashMap("EOF" -> (Token.END_OF_FILE, None)), -1, -1, -1, -1)
     }
 
     val ch = str.charAt(strPos)
@@ -198,49 +198,29 @@ object Automata {
 
     //leu caractere ignorado...
     if(nextState.equals(AutomataAction.INITIAL_STATE))
-        processing(str, strPos + 1, strSize, newLineCount, 0, lex, symbolTable, columnCount+1)
+        processing(str, strPos + 1, strSize, newLineCount, 0, lex,  columnCount+1, symbolTable)
 
     //transição ok
     else if(nextState > AutomataAction.INITIAL_STATE)
-      processing(str, strPos + 1, strSize, newLineCount, nextState, lex + ch, symbolTable, columnCount+1)
+      processing(str, strPos + 1, strSize, newLineCount, nextState, lex + ch, columnCount+1, symbolTable)
 
     //transitou para caractere que não estava na função de transição
     else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
-
-      //se o estado de anterior era de rejeição, então a formação do token não foi concluída... erro!
-      if(rejectionStates.contains(previousState)){
-        println("[ERRO de fechamento]" + " tipo: " + rejectionStates(previousState) +   " linha: " + line + " coluna: " + column )
-      }
-
-      val newsymbT = (typeByState:String) => {
-        val tkn = acceptedStates(previousState)
-
-        //estado de aceitação
-        if(!tkn.isEmpty) {
-          if(tkn.equals(Token.ID) && symbolTable.contains(lex)) {
-            println("( " + symbolTable(lex)._1 + ", " + lex  + ", " + symbolTable(lex)._2 + " )" )
-            symbolTable
-          }
-          else{
-            println("( " + tkn + ", " + lex  + ", " + typeByState + " )" )
-            if(tkn.equals(Token.ID))
-              symbolTable + (lex -> (tkn, typeByState) )
-            else
-              symbolTable
-          }
-        }
+      val acceptanceToken = acceptedStates(previousState)
+      if(!acceptanceToken.isEmpty) {
+        if(acceptanceToken.equals(Token.ID) && symbolTable.contains(lex))
+          (HashMap(lex -> (symbolTable(lex)._1, symbolTable(lex)._2)), strPos, 0, line, columnCount)
         else
-          symbolTable
+          (HashMap(lex -> (acceptanceToken, getTypeByState(previousState))), strPos, 0, line, columnCount)
       }
-
-      //continua o processamento
-      processing(str, strPos, strSize, line, 0, "", newsymbT(getTypeByState(previousState)), columnCount)
+      else
+        (HashMap(lex -> (Token.ERROR, None)),strPos, 0, line, columnCount)
     }
 
     //caractere não existe no alfabeto...
     else{
       println("[ERRO de símbolo inválido] -> Caracterece: " + ch + " linha: " + line + " coluna: " + column )
-      processing(str, strPos+1, strSize, line, 0, "", symbolTable, columnCount+1)
+      processing(str, strPos+1, strSize, line, 0, "",  columnCount+1, symbolTable)
     }
   }
 
