@@ -29,16 +29,11 @@ object Automata {
 
   val automataTransitionTable: Map[Int, Map[String, Int]] = Map(
     //state 0
-    0 -> Map[String, Int](
+    0 -> (Map[String, Int](
         "\t" -> 0, " " -> 0, ";" -> 0, "\n" -> 0,
         "(" -> 1,
         ")" -> 2,
         ";" -> 3,
-
-        "a" -> 4, "b" -> 4, "c" -> 4, "d" -> 4, "e" -> 4, "f" -> 4, "g" -> 4, "h" -> 4, "i" -> 4, "j" -> 4, "k" -> 4, //qualquer letra
-        "l" -> 4, "m" -> 4, "n" -> 4, "o" -> 4, "p" -> 4, "q" -> 4, "r" -> 4, "s" -> 4, "t"->4, "u" -> 4, "v" -> 4,
-        "w" -> 4, "x" -> 4, "y" -> 4, "z" -> 4,
-
         CharPattern.NUMERIC -> 5, // qualquer dígito
         "{" -> 10,
         "\"" -> 12,
@@ -46,7 +41,8 @@ object Automata {
          ">" -> 16,
         "<" -> 15,
         "=" -> 17
-    ).withDefaultValue(AutomataAction.SYMBOL_NOT_FOUND),
+    ) ++ wordRangeRangeList.map(c => c.toString -> 4).toMap[String, Int])
+      .withDefaultValue(AutomataAction.SYMBOL_NOT_FOUND),
 
     //state 1
     1 -> Map[String, Int](
@@ -61,12 +57,9 @@ object Automata {
     ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND), //estado sem transições; aceitação
 
     //state 4
-    4 -> Map[String, Int]( //estado de aceitação
-      "a" -> 4, "b" -> 4, "c" -> 4, "d" -> 4, "e" -> 4, "f" -> 4, "g" -> 4, "h" -> 4, "i" -> 4, "j" -> 4, "k" -> 4, //qualquer letra
-      "l" -> 4, "m" -> 4, "n" -> 4, "o" -> 4, "p" -> 4, "q" -> 4, "r" -> 4, "s" -> 4, "t"->4, "u" -> 4, "v" -> 4,
-      "w" -> 4, "x" -> 4, "y" -> 4, "z" -> 4,
+    4 -> (Map[String, Int]( //estado de aceitação
       CharPattern.NUMERIC -> 4, "_" -> 4
-    ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
+    ) ++ wordRangeRangeList.map(c => c.toString -> 4).toMap[String, Int]).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
 
     //state 5
     5 -> Map[String, Int]( //estado de aceitação
@@ -103,35 +96,29 @@ object Automata {
     ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
 
     //state 10
-    10 -> Map[String, Int](
+    10 -> (Map[String, Int](
       CharPattern.NUMERIC -> 10,
-
-      "a" -> 10, "b" -> 10, "c" -> 10, "d" -> 10, "e" -> 10, "f" -> 10, "g" -> 10, "h" -> 10, "i" -> 10, "j" -> 10, "k" -> 10, //qualquer letra
-      "l" -> 10, "m" -> 10, "n" -> 10, "o" -> 10, "p" -> 10, "q" -> 10, "r" -> 10, "s" -> 10, "t"-> 10, "u" -> 10, "v" -> 10,
-      "w" -> 10, "x" -> 10, "y" -> 10, "z" -> 10, "\n" -> 10,
-
+      "\n" -> 10,
       CharPattern.LOGICAL -> 10, "." -> 10, "*" -> 10, "+" -> 10, "(" -> 10, ")" -> 10, "+"-> 10, "-"-> 10, "="->10,
       "<"->10,
       "-" -> 10, "/" -> 10, "_" -> 10, "\\" -> 10, " " -> 10, ";" -> 10,  "\"" -> 10, ":" -> 10, "," -> 10,
       "}" -> 11
-    ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
+    ) ++ wordRangeRangeList.map(c => c.toString -> 10).toMap[String, Int])
+      .withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
 
     //state 11
     11 -> Map[String, Int](
     ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND), //estado sem transições; aceitação
 
     //state 12
-    12 -> Map[String, Int](
+    12 -> (Map[String, Int](
       CharPattern.NUMERIC -> 12,
-
-      "a" -> 12, "b" -> 12, "c" -> 12, "d" -> 12, "e" -> 12, "f" -> 12, "g" -> 12, "h" -> 12, "i" -> 12, "j" -> 12, "k" -> 12, //qualquer letra
-      "l" -> 12, "m" -> 12, "n" -> 12, "o" -> 12, "p" -> 12, "q" -> 12, "r" -> 12, "s" -> 12, "t"->12, "u" -> 12, "v" -> 12,
-      "w" -> 12, "x" -> 12, "y" -> 12, "z" -> 12,
 
       CharPattern.LOGICAL -> 12, "." -> 12, ";" -> 12, "*" -> 12, "+" -> 12, " " -> 12, ";" -> 12,  ":" -> 12,
       "-" -> 12, "/" -> 12, "_" -> 12, "\\" -> 12, "\\" -> 12, "=" -> 12,
       "\"" -> 13
-    ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
+    ) ++ wordRangeRangeList.map(c => c.toString -> 12).toMap[String, Int])
+      .withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND),
 
     //state 13
     13 -> Map[String, Int](

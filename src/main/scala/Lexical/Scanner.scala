@@ -47,7 +47,7 @@ object Scanner {
           LexicalProcessing(HashMap(lex -> (acceptanceToken, getTypeByState(previousState))), strPos, 0, line, columnCount)
       }
       else {
-        println("[ERRO de fechamento] -> Caracterece: " + ch + " linha: " + line + " coluna: " + column )
+        println("[ERRO de fechamento] -> Caracterece inesperado: " + {if(ch.equals('\n')) "\\n" else ch.toString} + " linha: " + line + " coluna: " + column )
         LexicalProcessing(HashMap(lex -> (Token.ERROR, None)),strPos, 0, line, columnCount)
       }
     }
@@ -66,10 +66,7 @@ object Scanner {
   }
 
   private def getCharGroup(c: Char): CharPattern = {
-    if(Automata.wordRangeRangeList.contains(c))
-      c.toLower.toString
-
-    else if(numberRangeRangeList.contains(c))
+    if(numberRangeRangeList.contains(c))
       CharPattern.NUMERIC
 
     else if(c.equals('\n'))
