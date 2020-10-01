@@ -1,21 +1,17 @@
-package DFA
+package Lexical
 
 
-import Enum.CharPattern.CharPattern
 import Enum.Token.Token
-import Enum.{AutomataAction, CharPattern, D_Type, Token}
-import Utils.Common.SymbolTable
+import Enum.{AutomataAction, CharPattern, Token}
 
-import scala.annotation.tailrec
-import scala.collection.immutable.HashMap
 
 
 object Automata {
-  private val wordRangeRangeList = ('a' to 'z').concat('A' to 'Z').toList
-  private val numberRangeRangeList = ('0' to '9').toList
-  private val ignoredRangeList = List(' ', '\n', '\t', ';')
+  val wordRangeRangeList = ('a' to 'z').concat('A' to 'Z').toList
+  val numberRangeRangeList = ('0' to '9').toList
+  val ignoredRangeList = List(' ', '\n', '\t', ';')
 
-  private val acceptedStates: Map[Int, Token] = Map[Int, Token](
+  val acceptedStates: Map[Int, Token] = Map[Int, Token](
     1 -> Token.OP_PARENTHESIS,
     2 -> Token.CL_PARENTHESIS, 3 -> Token.SEMICOLON,
     4 -> Token.ID, 5 -> Token.NUMBER ,
@@ -31,7 +27,7 @@ object Automata {
     81 -> Token.NUMBER,
     10 -> Token.COMMENT, 12-> Token.LITERAL)
 
-  private val automataTransitionTable: Map[Int, Map[String, Int]] = Map(
+  val automataTransitionTable: Map[Int, Map[String, Int]] = Map(
     //state 0
     0 -> Map[String, Int](
         "\t" -> 0, " " -> 0, ";" -> 0, "\n" -> 0,
@@ -49,8 +45,7 @@ object Automata {
         "+" -> 14, "-" -> 14, "/" -> 14, "*" -> 14,
          ">" -> 16,
         "<" -> 15,
-        "=" -> 17,
-        "eof" -> 22
+        "=" -> 17
     ).withDefaultValue(AutomataAction.SYMBOL_NOT_FOUND),
 
     //state 1
@@ -171,84 +166,6 @@ object Automata {
     ).withDefaultValue(AutomataAction.TRANSITION_NOT_FOUND), //estado sem transições; aceitação
 
   )
-
-
-  //esta função retorna o estado seguinte do automato, baseado no caractere fornecido
-  def getNextState(classification: String, state: Int): Int = {
-     this.automataTransitionTable(state)(classification)
-  }
-
-  @tailrec
-  final def processing(str:String,
-                       strPos: Int, strSize: Int,
-                       line: Int, previousState: Int, lex: String, column: Int, symbolTable: SymbolTable): Tuple5[SymbolTable, Int, Int, Int, Int] = {
-    //caso base
-    if(strPos >= strSize ) {
-      return (HashMap("EOF" -> (Token.END_OF_FILE, None)), -1, -1, -1, -1)
-    }
-
-    val ch = str.charAt(strPos)
-    val charGroup = getCharGroup(ch)
-
-    val nextState = this.getNextState(charGroup, previousState)
-
-    //para tratativa de erro!
-    val newLineCount: Int = if(ch.equals('\n')) line + 1 else line
-    val columnCount:Int = if(ch.equals('\n')) 0 else column
-
-    //leu caractere ignorado...
-    if(nextState.equals(AutomataAction.INITIAL_STATE))
-        processing(str, strPos + 1, strSize, newLineCount, 0, lex,  columnCount+1, symbolTable)
-
-    //transição ok
-    else if(nextState > AutomataAction.INITIAL_STATE)
-      processing(str, strPos + 1, strSize, newLineCount, nextState, lex + ch, columnCount+1, symbolTable)
-
-    //transitou para caractere que não estava na função de transição
-    else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
-      val acceptanceToken = acceptedStates(previousState)
-      if(!acceptanceToken.isEmpty) {
-        if(acceptanceToken.equals(Token.ID) && symbolTable.contains(lex))
-          (HashMap(lex -> (symbolTable(lex)._1, symbolTable(lex)._2)), strPos, 0, line, columnCount)
-        else
-          (HashMap(lex -> (acceptanceToken, getTypeByState(previousState))), strPos, 0, line, columnCount)
-      }
-      else
-        (HashMap(lex -> (Token.ERROR, None)),strPos, 0, line, columnCount)
-    }
-
-    //caractere não existe no alfabeto...
-    else{
-      println("[ERRO de símbolo inválido] -> Caracterece: " + ch + " linha: " + line + " coluna: " + column )
-      processing(str, strPos+1, strSize, line, 0, "",  columnCount+1, symbolTable)
-    }
-  }
-
-
-  private def getCharGroup(c: Char): CharPattern = {
-    if(wordRangeRangeList.contains(c))
-      c.toLower.toString
-    else if(numberRangeRangeList.contains(c))
-      CharPattern.NUMERIC
-
-    else if(c.equals('\n'))
-      "\n"
-
-    // retorna o próprio caractere
-    else
-    c.toString
-  }
-
-  private def getTypeByState(state: Int): String= {
-    state match {
-      case 5 => D_Type.INTEGER
-      case 8 => D_Type.REAL
-      case 9 => D_Type.REAL
-      case _ => ""
-    }
-  }
-
-
 
 
 }

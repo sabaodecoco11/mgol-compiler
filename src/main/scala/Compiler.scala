@@ -1,4 +1,6 @@
+import Lexical.Scanner
 import Utils.Common
+import Utils.Common.SymbolTable
 
 import scala.annotation.tailrec
 import scala.io.Source
@@ -11,32 +13,40 @@ object Compiler extends App{
 
   try {
     val fileSource: Source = Source.fromFile(filePath)
-    val init = System.currentTimeMillis();
 
     val lines = fileSource.getLines();
 
     val content = getStringFromLines(lines, "")
 
-    Scanner.begin(content, 0, content.size, 1, 0, 0, "", Common.getSymbolTable())
-
-    val exit = System.currentTimeMillis();
+    getAllTokens(content, 0, content.size, 1, 1, 0, "", Common.getSymbolTable())
 
     fileSource.close()
 
-    println("\nExecution time: " + (exit - init) + "ms")
-
   }catch{
     case e:
-        Exception => println("Deu ruim " + e.getMessage)
+        Exception => println(e.getMessage)
   }
 
   @tailrec
   def getStringFromLines(lines: Iterator[String], str: String): String ={
-    if(lines.hasNext){
+    if(lines.hasNext)
       getStringFromLines(lines.drop(0), str + lines.next() + "\n" )
-    }
+
+    else str
+  }
+
+  @tailrec
+  def getAllTokens(content: String, strPos: Int, strSize: Int, line: Int, column: Int,  previousState: Int, lexeme: String, symbolTable: SymbolTable): Unit = {
+    val lexData = Scanner.getToken(content,  strPos, content.size, line,  previousState, "", column, Common.getSymbolTable())
+
+    //mostra o lexema, token e tipo
+    for((k,v) <- lexData.symbTableEntry)
+      println(k.replace("\n", " ") + " " + v._1 + " " + v._2)
+
+    if(lexData.symbTableEntry.contains("EOF")) return;
+
     else
-      str + "eof"
+      getAllTokens(content, lexData.lastPos, content.size, lexData.line, lexData.column, lexData.state, "", symbolTable ++ lexData.symbTableEntry)
   }
 
 
