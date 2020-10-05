@@ -40,13 +40,13 @@ object Compiler extends App{
     val lexData = Scanner.getToken(content,  strPos, content.size, line,  previousState, "", column, Common.getSymbolTable())
 
     //mostra o lexema, token e tipo
-    for((k,v) <- lexData.symbTableEntry)
+    for((k,v) <- lexData.recognizedToken)
       println(k.replace("\n", " ") + " " + v._1 + " " + v._2)
 
-    if(lexData.symbTableEntry.contains("EOF")) return;
+    if(lexData.recognizedToken.contains("EOF")) return;
 
     else
-      getAllTokens(content, lexData.lastPos, content.size, lexData.line, lexData.column, lexData.state, "", symbolTable ++ lexData.symbTableEntry)
+      getAllTokens(content, lexData.lastPos, content.size, lexData.line, lexData.column, lexData.state, "", lexData.updatedSymbolTable)
   }
 
 

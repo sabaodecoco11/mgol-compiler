@@ -1,6 +1,7 @@
 package Lexical
 
 import Enum.CharPattern.CharPattern
+import Enum.Token.Token
 import Enum.{AutomataAction, CharPattern, D_Type, Token}
 import Lexical.Automata.numberRangeRangeList
 import Utils.Common.SymbolTable
@@ -10,7 +11,10 @@ import scala.collection.immutable.HashMap
 
 object Scanner {
 
-  case class LexicalProcessing(symbTableEntry: SymbolTable, lastPos: Int, state: Int, line: Int, column: Int )
+  case class LexicalProcessing(recognizedToken: SymbolTable,
+                               lastPos: Int,
+                               state: Int,
+                               line: Int, column: Int, updatedSymbolTable: SymbolTable)
 
   @tailrec
   final def getToken(str:String,
@@ -18,7 +22,7 @@ object Scanner {
                      line: Int, previousState: Int, lex: String, column: Int, symbolTable: SymbolTable): LexicalProcessing = {
     //caso base
     if(strPos >= strSize )
-      return LexicalProcessing(HashMap("EOF" -> (Token.END_OF_FILE, None)), -1, -1, -1, -1)
+      return LexicalProcessing(HashMap("EOF" -> (Token.END_OF_FILE, None)), -1, -1, -1, -1, symbolTable)
 
     val ch = str.charAt(strPos)
     val charGroup = getCharGroup(ch)
@@ -41,21 +45,28 @@ object Scanner {
     else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
       val acceptanceToken = Automata.acceptedStates(previousState)
       if(!acceptanceToken.isEmpty) {
-        if(acceptanceToken.equals(Token.ID) && symbolTable.contains(lex))
-          LexicalProcessing(HashMap(lex -> (symbolTable(lex)._1, symbolTable(lex)._2)), strPos, 0, line, columnCount)
-        else
-          LexicalProcessing(HashMap(lex -> (acceptanceToken, getTypeByState(previousState))), strPos, 0, line, columnCount)
+          val hasSymbolTableEntry = if(acceptanceToken.equals(Token.ID) && symbolTable.contains(lex)) true else false
+          val updatedSymbolTable: SymbolTable =
+            if(!hasSymbolTableEntry && acceptanceToken.equals(Token.ID))
+              HashMap(lex -> (acceptanceToken, getTypeByState(previousState))) ++ symbolTable
+            else
+              symbolTable
+
+          val tokenClassification: Token = if(hasSymbolTableEntry) symbolTable(lex)._1 else acceptanceToken
+          val candidateToken:SymbolTable = HashMap(lex -> (tokenClassification, getTypeByState(previousState)))
+
+          LexicalProcessing(candidateToken, strPos, 0, line, columnCount, updatedSymbolTable)
       }
       else {
         println("[ERRO de fechamento] -> Caracterece inesperado: " + {if(ch.equals('\n')) "\\n" else ch.toString} + " linha: " + line + " coluna: " + column )
-        LexicalProcessing(HashMap(lex -> (Token.ERROR, None)),strPos, 0, line, columnCount)
+        LexicalProcessing(HashMap(lex -> (Token.ERROR, None)),strPos, 0, line, columnCount, symbolTable)
       }
     }
 
     //caractere não existe no alfabeto...
     else{
       println("[ERRO de símbolo inválido] -> Caracterece: " + ch + " linha: " + line + " coluna: " + column )
-      LexicalProcessing(HashMap(ch.toString -> (Token.ERROR, None)), strPos+1, 0, line, columnCount)
+      LexicalProcessing(HashMap(ch.toString -> (Token.ERROR, None)), strPos+1, 0, line, columnCount, symbolTable)
 //      getToken(str, strPos+1, strSize, line, 0, "",  columnCount+1, symbolTable)
     }
   }
