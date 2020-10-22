@@ -1,4 +1,5 @@
 import Lexical.Scanner
+import Syntactic.Parser
 import Utils.Common
 import Utils.Common.SymbolTable
 
@@ -17,8 +18,8 @@ object Compiler extends App{
     val lines = fileSource.getLines();
 
     val content = getStringFromLines(lines, "")
-
-    getAllTokens(content, 0, content.size, 1, 1, 0, "", Common.getSymbolTable())
+    
+    Parser.init()
 
     fileSource.close()
 

@@ -5,20 +5,17 @@ import scala.annotation.tailrec
 object CSV_Processor {
 
   @tailrec
-  def getCsvInfo(linePos: Int, lines: List[String], csvColumn: String): Unit ={
+  def getTransitionTable(linePos: Int, lines: List[String], csvColumn: String, transitionMap: Map[Int, Map[String, String]]): Map[Int, Map[String, String]] ={
 
     if(lines.length <= 0) {
-      println("\nEnd!")
-      return
+      return transitionMap
     }
 
-    println(s"\nESTADO: $linePos")
     val rowMap = processColumn(lines.head, 0,  linePos, csvColumn, 0, Map.empty[String, String], ",")
 
-    println(rowMap)
+    val updatedTransitionMap = Map[Int, Map[String, String]](linePos -> rowMap)
 
-    getCsvInfo(linePos + 1, lines.drop(1), csvColumn)
-
+    getTransitionTable(linePos + 1, lines.drop(1), csvColumn, updatedTransitionMap ++ transitionMap)
   }
 
   @tailrec
@@ -40,8 +37,8 @@ object CSV_Processor {
 
       val rowElement = if(firstCommaRow >= 0) row.substring(rowIndex, firstCommaRow) else ""
 
-      if(!rowElement.isEmpty && !rowElement.equals(separator) && !element.isEmpty && !element.equals(separator))
-        println(s"$element" + s": $rowElement")
+//      if(!rowElement.isEmpty && !rowElement.equals(separator) && !element.isEmpty && !element.equals(separator))
+//        println(s"$element" + s": $rowElement")
 
       val updatedMap = {
         if(!rowElement.isEmpty && !rowElement.equals(separator) && !element.isEmpty && !element.equals(separator))
