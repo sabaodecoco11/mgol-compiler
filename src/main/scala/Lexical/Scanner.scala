@@ -19,7 +19,7 @@ object Scanner {
   @tailrec
   final def getToken(str:String,
                      strPos: Int, strSize: Int,
-                     line: Int, previousState: Int, lex: String, column: Int, symbolTable: SymbolTable): LexicalProcessing = {
+                     line: Int, previousState: Int, lex: String, column: Int, symbolTable: SymbolTable, ignoreComment: Boolean): LexicalProcessing = {
     //caso base
     if(strPos >= strSize )
       return LexicalProcessing(HashMap("EOF" -> (Token.END_OF_FILE, None)), -1, -1, -1, -1, symbolTable)
@@ -35,16 +35,16 @@ object Scanner {
 
     //leu caractere ignorado...
     if(nextState.equals(AutomataAction.INITIAL_STATE))
-      getToken(str, strPos + 1, strSize, newLineCount, 0, lex,  columnCount+1, symbolTable)
+      getToken(str, strPos + 1, strSize, newLineCount, 0, lex,  columnCount+1, symbolTable, ignoreComment)
 
     //transição ok
     else if(nextState > AutomataAction.INITIAL_STATE)
-      getToken(str, strPos + 1, strSize, newLineCount, nextState, lex + ch, columnCount+1, symbolTable)
+      getToken(str, strPos + 1, strSize, newLineCount, nextState, lex + ch, columnCount+1, symbolTable, ignoreComment)
 
     //transitou para caractere que não estava na função de transição
     else if(nextState.equals(AutomataAction.TRANSITION_NOT_FOUND)){
       val acceptanceToken = Automata.acceptedStates(previousState)
-      if(!acceptanceToken.isEmpty) {
+      if(!acceptanceToken.isEmpty && !(acceptanceToken.equals(Token.COMMENT) && ignoreComment)) {
           val hasSymbolTableEntry = if(acceptanceToken.equals(Token.ID) && symbolTable.contains(lex)) true else false
           val updatedSymbolTable: SymbolTable =
             if(!hasSymbolTableEntry && acceptanceToken.equals(Token.ID))
@@ -56,6 +56,10 @@ object Scanner {
           val candidateToken:SymbolTable = HashMap(lex -> (tokenClassification, getTypeByState(previousState)))
 
           LexicalProcessing(candidateToken, strPos, 0, line, columnCount, updatedSymbolTable)
+      }
+      //reconhece o comentário mas não o retorna... segue o baile...
+      else if(acceptanceToken.equals(Token.COMMENT) && ignoreComment){
+        getToken(str, strPos, strSize, newLineCount, 0, "", columnCount + 1, symbolTable, ignoreComment)
       }
       else {
         println("[ERRO de fechamento] -> Caracterece inesperado: " + {if(ch.equals('\n')) "\\n" else ch.toString} + " linha: " + line + " coluna: " + column )

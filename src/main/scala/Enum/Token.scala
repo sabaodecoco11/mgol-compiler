@@ -5,7 +5,7 @@ object Token extends Enumeration {
 
   val NUMBER = "num"
   val ID = "id"
-  val LITERAL = "Literal"
+  val LITERAL = "literal"
   val END_OF_FILE = "EOF"
   val REL_OPERATOR = "OPR"
   val MATH_OPERATOR = "OPM"

@@ -18,8 +18,12 @@ object Compiler extends App{
     val lines = fileSource.getLines();
 
     val content = getStringFromLines(lines, "")
-    
-    Parser.init()
+
+    val init = System.currentTimeMillis()
+    Parser.init(content)
+    val end = System.currentTimeMillis()
+
+    println( "elapsed time: " + (end-init) + "ms")
 
     fileSource.close()
 
@@ -36,19 +40,19 @@ object Compiler extends App{
     else str
   }
 
-  @tailrec
-  def getAllTokens(content: String, strPos: Int, strSize: Int, line: Int, column: Int,  previousState: Int, lexeme: String, symbolTable: SymbolTable): Unit = {
-    val lexData = Scanner.getToken(content,  strPos, content.size, line,  previousState, "", column, Common.getSymbolTable())
-
-    //mostra o lexema, token e tipo
-    for((k,v) <- lexData.recognizedToken)
-      println(k.replace("\n", " ") + " " + v._1 + " " + v._2)
-
-    if(lexData.recognizedToken.contains("EOF")) return;
-
-    else
-      getAllTokens(content, lexData.lastPos, content.size, lexData.line, lexData.column, lexData.state, "", lexData.updatedSymbolTable)
-  }
+//  @tailrec
+//  def getAllTokens(content: String, strPos: Int, strSize: Int, line: Int, column: Int,  previousState: Int, lexeme: String, symbolTable: SymbolTable): Unit = {
+//    val lexData = Scanner.getToken(content,  strPos, content.size, line,  previousState, "", column, Common.getSymbolTable())
+//
+//    //mostra o lexema, token e tipo
+//    for((k,v) <- lexData.recognizedToken)
+//      println(k.replace("\n", " ") + " " + v._1 + " " + v._2)
+//
+//    if(lexData.recognizedToken.contains("EOF")) return;
+//
+//    else
+//      getAllTokens(content, lexData.lastPos, content.size, lexData.line, lexData.column, lexData.state, "", lexData.updatedSymbolTable)
+//  }
 
 
 
