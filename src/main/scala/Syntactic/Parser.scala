@@ -9,7 +9,7 @@ object Parser {
 
   private def getAutomataTransition(pathToFile: String):Transition = {
     try{
-      val fileSource = Source.fromFile(pathToFile)
+      val fileSource = Source.fromResource(pathToFile)
 
       val strList = fileSource.getLines().toList
 
@@ -23,8 +23,10 @@ object Parser {
   }
 
   def init():Unit = {
-    val actionTransition = getAutomataTransition("/home/sabaodecoco/estudos/compiladores/action.csv")
-    val gotoTransition = getAutomataTransition("/home/sabaodecoco/estudos/compiladores/goto.csv")
+    val actionTransition = getAutomataTransition("action.csv")
+    val gotoTransition = getAutomataTransition("goto.csv")
+
+    println(actionTransition(58))
 
   }
 
