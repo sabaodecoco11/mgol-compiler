@@ -11,7 +11,7 @@ object CSV_Processor {
       return transitionMap
     }
 
-    val rowMap = processColumn(lines.head, 0,  linePos, csvColumn, 0, Map.empty[String, String], ",")
+    val rowMap = processColumn(lines.head, 0,  linePos, csvColumn, 0, Map.empty[String, String], ",").withDefaultValue("ERRO")
 
     val updatedTransitionMap = Map[Int, Map[String, String]](linePos -> rowMap)
 
