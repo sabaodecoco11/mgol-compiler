@@ -1,7 +1,6 @@
-import Lexical.Scanner
+
 import Syntactic.Parser
-import Utils.Common
-import Utils.Common.SymbolTable
+
 
 import scala.annotation.tailrec
 import scala.io.Source

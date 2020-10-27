@@ -1,6 +1,5 @@
 package Syntactic
 
-import Enum.Token
 import Lexical.Scanner
 import Lexical.Scanner.LexicalProcessing
 import Utils.{CSV_Processor, Common}
@@ -32,38 +31,64 @@ object Parser {
                                stateStack: List[String],
                                content: String,
                               lexData: LexicalProcessing): Unit = {
-    val state = stateStack.head
 
-//    println("[estado no topo: " + state + "]")
 
-    if(lexData.recognizedToken._2.equals("EOF")) return;
+    println("------------------------------------------------------------------")
 
-    //mostra o lexema, token e tipo
-//      println(lexData.recognizedToken._1 + " " + lexData.recognizedToken._2 + " " + lexData.recognizedToken._3)
+    val topState = stateStack.head
 
-    val action = actionTransitionTable(state.toInt)(lexData.recognizedToken._2)
+    println("[estado no topo: " + topState + s"\ttoken no inicio: ${lexData.recognizedToken._2}\n" +
+    "configuração da pilha: " + stateStack + "]\n")
 
+
+    //obtem a ação que deve ser realizada.
+    val action = actionTransitionTable(topState.toInt)(lexData.recognizedToken._2)
+
+    //efetua um empilhamento
     if(action.startsWith("S")) {
-      println(action)
+      val shiftState = action.substring(1)
+
+      println(s"\t>>Realizando shift para para $shiftState<<\n")
+
       val newlyUpdateLexData = Scanner.getToken(content, lexData.lastPos, content.size, lexData.line,
                                           lexData.state, "", lexData.column,
                                           lexData.updatedSymbolTable, ignoreComment = true)
 
-      parserProcessing(actionTransitionTable, gotoTransitionTable, action.substring(1)::stateStack, content, newlyUpdateLexData)
+      println(s"\t>>Novo token obtido:${newlyUpdateLexData.recognizedToken._2} e lex:${newlyUpdateLexData.recognizedToken
+      ._1}\n")
+
+      parserProcessing(actionTransitionTable, gotoTransitionTable, shiftState::stateStack, content, newlyUpdateLexData)
     }
+
+    //efetua uma redução
     else if(action.startsWith("R")) {
-      println("...reduzindo: ")
-      val production =  Productions.mapper(action.substring(1).toInt)
+      val reductionState = action.substring(1);
+
+      //obtêm o estado de redução
+      val productionState =  Productions.mapper(reductionState.toInt)
+
+      println(s"\t>>Realizando reduce para $reductionState<<")
 
       //obtem o número de produções da regra...
-      val popNumber = production._2.split(" ").size
+      val popNumber = productionState._2.split(" ").size
 
-      println("\tnumber of following pop's: " + popNumber)
+      println(s"\t\tnumber of following pop's: $popNumber")
 
       val newStateStack = stateStack.drop(popNumber)
 
+      println(s"\t\tstack after popping: $newStateStack\n")
+
+      val newStateHead = newStateStack.head
+
+      println(s"\tefetuando goto de $newStateHead com a produção ${productionState._1}")
+
       //obtem o estado que está no topo da pilha
-      val gotoState = gotoTransitionTable(newStateStack.head.toInt)(production._1)
+      val gotoState = gotoTransitionTable(newStateHead.toInt)(productionState._1)
+
+      if(gotoState.equals("ERRO")){
+        println("Deu ruim demais na hora de configurar o csv!!!!!")
+        return;
+      }
 
       parserProcessing(actionTransitionTable, gotoTransitionTable, gotoState::newStateStack, content, lexData)
 
@@ -72,10 +97,12 @@ object Parser {
 
     else if(action.startsWith("A")){
       println("\n\nAchou aceitacao!!");
-      parserProcessing(actionTransitionTable, gotoTransitionTable, action.charAt(1).toString::stateStack, content, lexData)
-
+      return;
     }
-    else{println("Rotina de tratamento de erros...")
+
+    //rotina de erros.
+    else{
+      println("Rotina de tratamento de erros...")
       return;
     }
 
@@ -86,9 +113,10 @@ object Parser {
     val actionTransitionTable = getAutomataTransition("action.csv")
     val gotoTransitionTable = getAutomataTransition("goto.csv")
 
+    val token = Scanner.getToken(content, 0, content.size, 1, 0, "", 1, Common.getSymbolTable(), true);
 
     parserProcessing(actionTransitionTable, gotoTransitionTable,
-      List[String]("0", "$"),content, Scanner.getToken(content, 0, content.size, 1, 0, "", 1, Common.getSymbolTable(), true))
+      List[String]("0", "$"),content, token)
 
   }
 
