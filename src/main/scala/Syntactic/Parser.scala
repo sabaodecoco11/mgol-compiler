@@ -46,7 +46,7 @@ object Parser {
                                panicSet: Option[Set[String]]): Unit = {
 
 
-    println("------------------------------------------------------------------")
+//    println("------------------------------------------------------------------")
 
     val topState = stateStack.head
 
@@ -54,7 +54,7 @@ object Parser {
     //senão, obtêm um novo token e informação se ele é sincronizador
     val syntaxSetupCheck: SyntaxSetupCheck = {
       if(panicSet.isEmpty){
-        SyntaxSetupCheck(lexData, false)
+        SyntaxSetupCheck(lexData, panicModeEnabled = false)
       }
       else{
 
@@ -63,8 +63,10 @@ object Parser {
           lexData.state, "", lexData.column,
           lexData.updatedSymbolTable, ignoreComment = true)
 
-        println(s"Tipo do novo token: ${updatedTokenData.recognizedToken._2} ")
-
+//        println(s"Tipo do novo token: ${updatedTokenData.recognizedToken._2} ")
+        if(panicSet.get.contains(updatedTokenData.recognizedToken._2)){
+          println("Sincronizando análise sintática.")
+        }
         SyntaxSetupCheck(updatedTokenData, !panicSet.get.contains(updatedTokenData.recognizedToken._2))
       }
     }
@@ -84,8 +86,8 @@ object Parser {
 
       val syntaxLexicalData = syntaxSetupCheck.token
 
-      println("[estado no topo: " + topState + s"\ttoken no inicio: ${syntaxLexicalData.recognizedToken._2}\n" +
-        "configuração da pilha: " + stateStack + "]\n")
+//      println("[estado no topo: " + topState + s"\ttoken no inicio: ${syntaxLexicalData.recognizedToken._2}\n" +
+//        "configuração da pilha: " + stateStack + "]\n")
 
 
       //obtem a ação que deve ser realizada.
@@ -95,14 +97,14 @@ object Parser {
       if(action.startsWith("S")) {
         val shiftState = action.substring(1)
 
-        println(s"\t>>Realizando shift para para $shiftState<<\n")
+//        println(s"\t>>Realizando shift para para $shiftState<<\n")
 
         val updatedTokenData = Scanner.getToken(content, syntaxLexicalData.lastPos, content.size, syntaxLexicalData.line,
                                             syntaxLexicalData.state, "", syntaxLexicalData.column,
                                             syntaxLexicalData.updatedSymbolTable, ignoreComment = true)
 
-        println(s"\t>>Novo token obtido:${updatedTokenData.recognizedToken._2} e lex:${updatedTokenData.recognizedToken
-        ._1}\n")
+//        println(s"\t>>Novo token obtido:${updatedTokenData.recognizedToken._2} e lex:${updatedTokenData.recognizedToken
+//        ._1}\n")
 
         parserProcessing(actionTransitionTable, gotoTransitionTable, shiftState::stateStack, content, updatedTokenData, None)
       }
@@ -114,20 +116,20 @@ object Parser {
         //obtêm o estado de redução
         val productionState =  Productions.mapper(reductionState.toInt)
 
-        println(s"\t>>Realizando reduce para $reductionState<<")
+//        println(s"\t>>Realizando reduce para $reductionState<<")
 
         //obtem o número de produções da regra...
         val popNumber = productionState._2.split(" ").size
 
-        println(s"\t\tnumber of following pop's: $popNumber")
+//        println(s"\t\tnumber of following pop's: $popNumber")
 
         val newStateStack = stateStack.drop(popNumber)
 
-        println(s"\t\tstack after popping: $newStateStack\n")
+//        println(s"\t\tstack after popping: $newStateStack\n")
 
         val newStateHead = newStateStack.head
 
-        println(s"\tefetuando goto de $newStateHead com a produção ${productionState._1}")
+//        println(s"\tefetuando goto de $newStateHead com a produção ${productionState._1}")
 
         //obtem o estado que está no topo da pilha
         val gotoState = gotoTransitionTable(newStateHead.toInt)(productionState._1)
@@ -151,9 +153,9 @@ object Parser {
       else{
         val expectedTokens = actionTransitionTable(topState.toInt).keySet
 
-        println(s"Erro sintático na linha ${lexData.line} e coluna ${lexData.column}..." +
+        println(s"[ERRO SINTÁTICO] na linha ${lexData.line} e coluna ${lexData.column}..." +
                 s" Esperava um desses tokens: ${expectedTokens.mkString(", ")}")
-        println("Iniciando modo pânico!...")
+        println("[[Iniciando modo pânico!...]]")
         parserProcessing(actionTransitionTable, gotoTransitionTable, stateStack, content, syntaxLexicalData, Some(expectedTokens))
       }
     }

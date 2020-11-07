@@ -8,11 +8,8 @@ import scala.io.Source
 
 object Compiler extends App{
 
-  //arquivo inicial para testes...
-  val filePath = "/home/sabaodecoco/estudos/compiladores/testeCompiladores"
-
   try {
-    val fileSource: Source = Source.fromFile(filePath)
+    val fileSource: Source = Source.fromResource("input.alg")
 
     val lines = fileSource.getLines();
 
