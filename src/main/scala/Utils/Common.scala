@@ -28,9 +28,9 @@ object Common {
         Token.R_IF_END -> (Token.R_IF_END , ""),
 
 
-        Token.R_ID_INT -> (Token.R_ID_INT , ""),
-        Token.R_ID_LIT -> (Token.R_ID_LIT, ""),
-        Token.R_ID_REAL -> (Token.R_ID_REAL, ""),
+        Token.R_ID_INT -> (Token.R_ID_INT , "int"),
+        Token.R_ID_LIT -> (Token.R_ID_LIT, "literal"),
+        Token.R_ID_REAL -> (Token.R_ID_REAL, "real"),
     )
 
   }

@@ -5,4 +5,5 @@ object D_Type extends Enumeration {
 
   val INTEGER = "inteiro"
   val REAL = "real"
+  val ASSIGN = "="
 }
