@@ -16,6 +16,9 @@ object SemanticOps {
   def action(state: Int, nonTerminal: NonTerminal, terminal: LexicalProcessing,
              semanticStack: List[Any], printWriter: PrintWriter, sequencer: Int, symbolTable: SymbolTable): SemanticInfo = {
     state match {
+      case 4 =>
+        //neste caso, a declaração das variáveis já foi feita... desempilhe tudo.
+        SemanticInfo(semanticStack.empty, sequencer, symbolTable)
       case 5 =>
         printWriter.write("\n\n\n")
         SemanticInfo(semanticStack, sequencer, symbolTable)
@@ -47,42 +50,90 @@ object SemanticOps {
         //obtenho o token id.
         val tokenWithIntClassification: TokenAttribute = semanticStack.head.asInstanceOf[TokenAttribute]
 
-        println(tokenWithIntClassification + s" tipinho: ")
-
         val updatedSemanticStack =
-          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithIntClassification.t_type)::semanticStack
+          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithIntClassification.t_type, None)::semanticStack
 
         SemanticInfo(updatedSemanticStack, sequencer, symbolTable)
 
       case 8 =>
         val tokenWithRealClassification: TokenAttribute = semanticStack.head.asInstanceOf[TokenAttribute]
 
-        println(tokenWithRealClassification + s" tipinho: ")
-
         val updatedSemanticStack =
-          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithRealClassification.t_type)::semanticStack
+          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithRealClassification.t_type, None)::semanticStack
 
         SemanticInfo(updatedSemanticStack, sequencer, symbolTable)
 
       case 9 =>
         val tokenWithLiteralClassification: TokenAttribute = semanticStack.head.asInstanceOf[TokenAttribute]
 
-        println(tokenWithLiteralClassification + s" tipinho: ")
-
         val updatedSemanticStack =
-          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithLiteralClassification.t_type)::semanticStack
+          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithLiteralClassification.t_type, None)::semanticStack
 
         SemanticInfo(updatedSemanticStack, sequencer, symbolTable)
 
       case 11 =>
-        printWriter.write("\tscanf(\" \", );\n")
-        SemanticInfo(semanticStack, sequencer, symbolTable)
+        val tokenWithIdClassification = semanticStack.find(element =>
+          element.isInstanceOf[TokenAttribute] &&
+            element.asInstanceOf[TokenAttribute].classification.equals(Token.ID))
+
+        if(tokenWithIdClassification.isDefined && !tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type.isEmpty){
+          val tknType = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type
+          val tknLex = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex
+          tknType match {
+            case "int" => printWriter.write("\tscanf(\"" + "%d\", " + tknLex + ");\n")
+            case "real" => printWriter.write("\tscanf(\"" + "%lf\", " + tknLex + ");\n")
+            case "literal" => printWriter.write("\tscanf(\"" + "%s\", " + tknLex + ");\n")
+          }
+          SemanticInfo(semanticStack.empty, sequencer, symbolTable)
+        }
+        else{
+
+          return null
+        }
+
+
       case 12 =>
-        printWriter.write("\tprintf(\"\");\n")
+        val nonTerminalArg = semanticStack.find(element => element.isInstanceOf[NonTerminal])
+
+        printWriter.write(s"\tprintf(${nonTerminalArg.get.asInstanceOf[NonTerminal].typeAttr});\n")
         SemanticInfo(semanticStack, sequencer, symbolTable)
+      case 13 =>
+        val tokenWithLiteralClassification: TokenAttribute = semanticStack.head.asInstanceOf[TokenAttribute]
+
+        val updatedSemanticStack =
+          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, tokenWithLiteralClassification.lex, None)::semanticStack
+
+        SemanticInfo(updatedSemanticStack, sequencer, symbolTable)
+
       case 18 =>
         printWriter.write(s"\tT$sequencer = ;\n")
         SemanticInfo(semanticStack, sequencer + 1, symbolTable)
+
+      case 20 =>
+        val tokenWithIdClassification = semanticStack.find(element =>
+          element.isInstanceOf[TokenAttribute] &&
+            element.asInstanceOf[TokenAttribute].classification.equals(Token.ID))
+
+        if(tokenWithIdClassification.isDefined && !tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type.isEmpty){
+          println("Instancia ok!")
+
+          val updatedSemanticStack =
+            NonTerminal(nonTerminal.lhs, nonTerminal.rhs, nonTerminal.typeAttr, tokenWithIdClassification.get.asInstanceOf[TokenAttribute])::semanticStack
+
+          SemanticInfo(updatedSemanticStack, sequencer, symbolTable)
+        }
+        else
+          //todo LANÇAR EXCEÇÃO
+          return null
+
+      case 21 =>
+        val tokenWithNumClassification = semanticStack.head
+
+        val updatedSemanticStack =
+          NonTerminal(nonTerminal.lhs, nonTerminal.rhs, nonTerminal.typeAttr, tokenWithNumClassification.asInstanceOf[TokenAttribute])::semanticStack
+
+        SemanticInfo(updatedSemanticStack, sequencer, symbolTable)
+
       case 23 =>
         printWriter.write("\t}\n")
         SemanticInfo(semanticStack, sequencer, symbolTable)
@@ -90,7 +141,22 @@ object SemanticOps {
         printWriter.write("\tif (){\n")
         SemanticInfo(semanticStack, sequencer, symbolTable)
       case 25 =>
-        printWriter.write(s"\tT$sequencer = ;\n")
+        //obtém os operadores na ordem de inserção
+        val tokensWithOPRDClassification = semanticStack.filter(element =>
+          element.isInstanceOf[NonTerminal]).reverse
+
+        val tokenWithOPRClassification = semanticStack.find(element =>
+          element.isInstanceOf[TokenAttribute] && element.asInstanceOf[TokenAttribute].classification.equals(Token.REL_OPERATOR))
+
+        val types = tokensWithOPRDClassification.map(t => t.asInstanceOf[NonTerminal].copy.asInstanceOf[TokenAttribute].t_type)
+
+        val typeResultComparison: Boolean = types.forall(element => element.equals(types.head))
+
+        println(s"SIZE: " + tokensWithOPRDClassification.size + " > " + tokensWithOPRDClassification + "\nresult: " + typeResultComparison)
+
+        val temporaryExpression = tokenWithOPRClassification.get.asInstanceOf[TokenAttribute].lex
+
+        printWriter.write(s"\tT$sequencer = ${temporaryExpression}\n")
         SemanticInfo(semanticStack, sequencer + 1, symbolTable)
       case 30 =>
         printWriter.write("\n/*fim*/")
