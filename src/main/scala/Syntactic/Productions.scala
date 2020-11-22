@@ -1,7 +1,7 @@
 package Syntactic
 
 object Productions {
-  case class NonTerminal(lhs: String, rhs: String, typeAttr: Any)
+  case class NonTerminal(lhs: String, rhs: String, typeAttr: String)
 
   val mapper = Map[Int, NonTerminal](
     1 -> NonTerminal("P\'", "P", ""),

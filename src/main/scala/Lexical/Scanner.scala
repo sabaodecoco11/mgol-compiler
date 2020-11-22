@@ -11,7 +11,7 @@ import scala.collection.immutable.HashMap
 
 object Scanner {
 
-  case class TokenAttribute(lex: String, classification: String, t_type: Option[String])
+  case class TokenAttribute(lex: String, classification: String, t_type: String)
 
   case class LexicalProcessing(recognizedToken: TokenAttribute,
                                lastPos: Int,
@@ -24,7 +24,7 @@ object Scanner {
                      line: Int, previousState: Int, lex: String, column: Int, symbolTable: SymbolTable, ignoreComment: Boolean): LexicalProcessing = {
     //caso base
     if(strPos >= strSize )
-      return LexicalProcessing(TokenAttribute("EOF", Token.END_OF_FILE, None), -1, -1, -1, -1, symbolTable)
+      return LexicalProcessing(TokenAttribute("EOF", Token.END_OF_FILE, ""), -1, -1, -1, -1, symbolTable)
 
     val ch = str.charAt(strPos)
     val charGroup = getCharGroup(ch)
@@ -55,7 +55,8 @@ object Scanner {
               symbolTable
 
           val tokenClassification: Token = if(hasSymbolTableEntry) symbolTable(lex)._1 else acceptanceToken
-          val candidateToken = TokenAttribute(lex,tokenClassification, Some(getTypeByState(previousState, lex)))
+          val tokenType = if(hasSymbolTableEntry) symbolTable(lex)._2 else getTypeByState(previousState, lex)
+          val candidateToken = TokenAttribute(lex,tokenClassification, tokenType)
 
           LexicalProcessing(candidateToken, strPos, 0, line, column, updatedSymbolTable)
       }
@@ -65,14 +66,14 @@ object Scanner {
       }
       else {
         println("[ERRO LÉXICO] -> Caracterece inesperado: " + {if(ch.equals('\n')) "\\n" else ch.toString} + " linha: " + line + " coluna: " + column )
-        LexicalProcessing(TokenAttribute(lex, Token.ERROR, None), strPos, 0, line, columnCount, symbolTable)
+        LexicalProcessing(TokenAttribute(lex, Token.ERROR, ""), strPos, 0, line, columnCount, symbolTable)
       }
     }
 
     //caractere não existe no alfabeto...
     else{
       println("[ERRO LÉXICO - símbolo inválido] -> Caracterece: " + ch + " linha: " + line + " coluna: " + column )
-      LexicalProcessing(TokenAttribute(ch.toString, Token.ERROR, None), strPos+1, 0, line, columnCount, symbolTable)
+      LexicalProcessing(TokenAttribute(ch.toString, Token.ERROR, ""), strPos+1, 0, line, columnCount, symbolTable)
 //      getToken(str, strPos+1, strSize, line, 0, "",  columnCount+1, symbolTable)
     }
   }

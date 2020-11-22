@@ -6,7 +6,6 @@ import Enum.Token
 import Lexical.Scanner
 import Lexical.Scanner.LexicalProcessing
 import Semantic.SemanticOps
-import Syntactic.Productions.NonTerminal
 import Utils.{CSV_Processor, Common}
 
 import scala.annotation.tailrec
@@ -15,7 +14,7 @@ import scala.io.Source
 object Parser {
   type Transition = Map[Int, Map[String, String]]
 
-  case class SyntaxSetupCheck(token: LexicalProcessing, panicModeEnabled: Boolean)
+  case class SyntaxSetupCheck(lexicalProcessing: LexicalProcessing, panicModeEnabled: Boolean)
 
   private def getAutomataTransition(pathToFile: String):Transition = {
     try{
@@ -37,13 +36,13 @@ object Parser {
     val gotoTransitionTable = getAutomataTransition("goto.csv")
 
     val token = Scanner.getToken(content, 0, content.size, line = 1,
-      previousState = 0, lex = "", column = 1, Common.getSymbolTable(), ignoreComment = true);
+      previousState = 0, lex = "", column = 1, Common.getSymbolTable, ignoreComment = true);
 
     val printWriter = new PrintWriter("/home/sabaodecoco/mgol-compiler/alg.c")
 
     printWriter.write("#include<stdio.h>\n")
-    printWriter.write("typedef char literal[256];\n")
-    printWriter.write("typedef double real;\n\n")
+    printWriter.write("\ntypedef char literal[256];\n")
+    printWriter.write("typedef double real;\n")
     printWriter.write("typedef int inteiro;\n\n")
     printWriter.write("void main(void){\n")
 
@@ -88,19 +87,19 @@ object Parser {
 
     //enquanto o modo panico estiver ligado, significa que o token sincronizador não foi encontrado... prosiga!
     if(syntaxSetupCheck.panicModeEnabled){
-      if(syntaxSetupCheck.token.recognizedToken.classification.equals(Token.END_OF_FILE)){
+      if(syntaxSetupCheck.lexicalProcessing.recognizedToken.classification.equals(Token.END_OF_FILE)){
         println("Não foi possível recuperar do modo pânico... sinto muito.")
         return;
       }
 
       println("Continuando modo pânico...")
       parserProcessing(actionTransitionTable, gotoTransitionTable,
-        stateStack, semanticStack, content, syntaxSetupCheck.token, panicSet, sequencer, printWriter)
+        stateStack, semanticStack, content, syntaxSetupCheck.lexicalProcessing, panicSet, sequencer, printWriter)
     }
 
     else{
 
-      val syntaxLexicalData = syntaxSetupCheck.token
+      val syntaxLexicalData = syntaxSetupCheck.lexicalProcessing
 
       println("[estado no topo: " + topState + s"\ttoken no inicio: ${syntaxLexicalData.recognizedToken.classification}" +
         " configuração da pilha: " + stateStack + "]"
@@ -120,8 +119,8 @@ object Parser {
                                             syntaxLexicalData.state, "", syntaxLexicalData.column,
                                             syntaxLexicalData.updatedSymbolTable, ignoreComment = true)
 
-        println(s"\t>>Novo token obtido:${updatedTokenData.recognizedToken.classification} e lex:${updatedTokenData.recognizedToken
-        .lex}\n")
+        println(s"\t>>Novo token obtido:${updatedTokenData.recognizedToken.classification} " +
+          s", lex:${updatedTokenData.recognizedToken.lex}, tipo: ${updatedTokenData.recognizedToken.t_type}\n")
 
         parserProcessing(actionTransitionTable, gotoTransitionTable,
           shiftState::stateStack, syntaxLexicalData.recognizedToken::semanticStack, content, updatedTokenData, None, sequencer, printWriter)
@@ -137,7 +136,9 @@ object Parser {
         println(s"\t>>Realizando reduce para $productionNumber<<")
 
         //realiza verificação semântica
-        val newSemanticStack = SemanticOps.action(productionNumber.toInt, nonTerminal, semanticStack, printWriter)
+        val semanticInfo = SemanticOps.action(productionNumber.toInt,
+          nonTerminal, syntaxLexicalData, semanticStack,
+          printWriter, sequencer, syntaxLexicalData.updatedSymbolTable)
 
         //obtem o número de produções da regra...
         val popNumber = nonTerminal.rhs.split(" ").size
@@ -160,13 +161,18 @@ object Parser {
           return;
         }
 
+        val newsyntaxLexicalData = syntaxLexicalData.copy(updatedSymbolTable = semanticInfo.updatedSymbolTable)
+
         parserProcessing(actionTransitionTable, gotoTransitionTable,
-          gotoState::newStateStack, newSemanticStack, content, syntaxLexicalData, None, sequencer, printWriter)
+          gotoState::newStateStack, semanticInfo.semanticStack,
+          content, newsyntaxLexicalData,
+          None, semanticInfo.updatedSequencer, printWriter)
 
       }
 
       else if(action.startsWith("A")){
         println("\n\nAchou aceitacao!!");
+        println(s"\n ${syntaxLexicalData.updatedSymbolTable}")
       }
 
       //rotina de erros (modo pânico).

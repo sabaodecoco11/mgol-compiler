@@ -8,12 +8,12 @@ import scala.collection.immutable.HashMap
 object Common {
 
   type Lexeme = String
-  type SymbolTable = HashMap[Lexeme, Tuple2[Token, Object]]
+  type SymbolTable = HashMap[Lexeme, Tuple2[Token, String]]
 
   //abaixo a tabela de símbolos está sendo populada com as palavras reservadas,
   // estas que possuem lexemas iguais aos tokens
-  def getSymbolTable(): HashMap[Lexeme, Tuple2[Token, Object]] = {
-      HashMap[Lexeme, Tuple2[Token, Object]](
+  def getSymbolTable: HashMap[Lexeme, Tuple2[Token, String]] = {
+      HashMap[Lexeme, Tuple2[Token, String]](
         Token.R_INIT -> (Token.R_INIT, ""),
         Token.R_END -> (Token.R_END, ""),
 
@@ -34,9 +34,9 @@ object Common {
     )
 
   }
-  def getSymbolTable(lexeme: Lexeme, token: Token, t: String): HashMap[Lexeme, Map[Token, Object]] = {
-    HashMap[Lexeme, Map[Token, String]](
-      lexeme -> Map(token -> t)
-    )
-  }
+//  def getSymbolTable(lexeme: Lexeme, token: Token, t: String): HashMap[Lexeme, Map[Token, Object]] = {
+//    HashMap[Lexeme, Map[Token, String]](
+//      lexeme -> Map(token -> t)
+//    )
+//  }
 }
