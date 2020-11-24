@@ -3,7 +3,7 @@ package Syntactic
 import Lexical.Scanner.TokenAttribute
 
 object Productions {
-  case class NonTerminal(lhs: String, rhs: String, typeAttr: String, copy: Any)
+  case class NonTerminal(lhs: String, rhs: String, singleAttribute: String, multiAttributes: Any)
 
   val mapper = Map[Int, NonTerminal](
     1 -> NonTerminal("P\'", "P", "", None),
