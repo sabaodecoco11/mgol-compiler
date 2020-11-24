@@ -40,15 +40,8 @@ object Parser {
 
     val printWriter = new PrintWriter("/home/sabaodecoco/mgol-compiler/alg.c")
 
-    printWriter.write("#include<stdio.h>\n")
-    printWriter.write("\ntypedef char literal[256];\n")
-    printWriter.write("typedef double real;\n")
-    printWriter.write("typedef int inteiro;\n\n")
-    printWriter.write("void main(void){\n")
-
-
     parserProcessing(actionTransitionTable, gotoTransitionTable,
-      List[String]("0"), List[Any](),content, token, None, sequencer = 0, printWriter)
+      List[String]("0"), List[Any](),content, token, None, sequencer = 0, printWriter, "", "")
 
     printWriter.close();
 
@@ -58,7 +51,8 @@ object Parser {
   private def parserProcessing(actionTransitionTable: Transition, gotoTransitionTable: Transition,
                                stateStack: List[String], semanticStack: List[Any],
                                content: String, lexData: LexicalProcessing,
-                               panicSet: Option[Set[String]], sequencer: Int, printWriter: PrintWriter): Unit = {
+                               panicSet: Option[Set[String]], sequencer: Int, printWriter: PrintWriter,
+                               translationContent: String, tempVariablesTranslationContent: String): Unit = {
 
     println("------------------------------------------------------------------")
 
@@ -94,7 +88,7 @@ object Parser {
 
       println("Continuando modo pânico...")
       parserProcessing(actionTransitionTable, gotoTransitionTable,
-        stateStack, semanticStack, content, syntaxSetupCheck.lexicalProcessing, panicSet, sequencer, printWriter)
+        stateStack, semanticStack, content, syntaxSetupCheck.lexicalProcessing, panicSet, sequencer, printWriter, translationContent, tempVariablesTranslationContent)
     }
 
     else{
@@ -123,7 +117,8 @@ object Parser {
           s", lex:${updatedTokenData.recognizedToken.lex}, tipo: ${updatedTokenData.recognizedToken.t_type}\n")
 
         parserProcessing(actionTransitionTable, gotoTransitionTable,
-          shiftState::stateStack, syntaxLexicalData.recognizedToken::semanticStack, content, updatedTokenData, None, sequencer, printWriter)
+          shiftState::stateStack, syntaxLexicalData.recognizedToken::semanticStack, content, updatedTokenData,
+          None, sequencer, printWriter, translationContent, tempVariablesTranslationContent)
       }
 
       //efetua uma redução
@@ -137,8 +132,8 @@ object Parser {
 
         //realiza verificação semântica
         val semanticInfo = SemanticOps.action(productionNumber.toInt,
-          nonTerminal, syntaxLexicalData, semanticStack,
-          printWriter, sequencer, syntaxLexicalData.updatedSymbolTable)
+          nonTerminal, syntaxLexicalData, semanticStack
+          , sequencer, syntaxLexicalData.updatedSymbolTable, translationContent, tempVariablesTranslationContent)
 
         //obtem o número de produções da regra...
         val popNumber = nonTerminal.rhs.split(" ").size
@@ -166,12 +161,23 @@ object Parser {
         parserProcessing(actionTransitionTable, gotoTransitionTable,
           gotoState::newStateStack, semanticInfo.semanticStack,
           content, newsyntaxLexicalData,
-          None, semanticInfo.updatedSequencer, printWriter)
+          None, semanticInfo.updatedSequencer, printWriter, semanticInfo.content, semanticInfo.tempContent)
 
       }
 
       else if(action.startsWith("A")){
         println("\n\nAchou aceitacao!!");
+
+        printWriter.write("#include<stdio.h>\n")
+        printWriter.write("\ntypedef char literal[256];\n")
+        printWriter.write("typedef double real;\n")
+        printWriter.write("typedef int inteiro;\n\n")
+        printWriter.write("void main(void){\n")
+
+        printWriter.write("\t/*variáveis temporárias*/\n")
+        printWriter.write(tempVariablesTranslationContent)
+        printWriter.write("\n\t/*variáveis convencionais*/\n")
+        printWriter.write(translationContent)
         println(s"\n ${syntaxLexicalData.updatedSymbolTable}")
       }
 
@@ -183,7 +189,7 @@ object Parser {
                 s" Esperava um desses tokens: ${expectedTokens.mkString(", ")}")
         println("[[Iniciando modo pânico!...]]")
         parserProcessing(actionTransitionTable, gotoTransitionTable,
-          stateStack, semanticStack, content, syntaxLexicalData, Some(expectedTokens), sequencer, printWriter)
+          stateStack, semanticStack, content, syntaxLexicalData, Some(expectedTokens), sequencer, printWriter, translationContent, tempVariablesTranslationContent)
       }
     }
 
