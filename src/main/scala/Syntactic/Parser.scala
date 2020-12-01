@@ -38,12 +38,9 @@ object Parser {
     val token = Scanner.getToken(content, 0, content.size, line = 1,
       previousState = 0, lex = "", column = 1, Common.getSymbolTable, ignoreComment = true);
 
-    val printWriter = new PrintWriter("/home/sabaodecoco/mgol-compiler/alg.c")
-
     parserProcessing(actionTransitionTable, gotoTransitionTable,
-      List[String]("0"), List[Any](),content, token, None, sequencer = 0, printWriter, "", "")
+      List[String]("0"), List[Any](),content, token, None, sequencer = 0,  "", "")
 
-    printWriter.close();
 
   }
 
@@ -51,7 +48,7 @@ object Parser {
   private def parserProcessing(actionTransitionTable: Transition, gotoTransitionTable: Transition,
                                stateStack: List[String], semanticStack: List[Any],
                                content: String, lexData: LexicalProcessing,
-                               panicSet: Option[Set[String]], sequencer: Int, printWriter: PrintWriter,
+                               panicSet: Option[Set[String]], sequencer: Int,
                                translationContent: String, tempVariablesTranslationContent: String): Unit = {
 
     println("------------------------------------------------------------------")
@@ -88,7 +85,7 @@ object Parser {
 
       println("Continuando modo pânico...")
       parserProcessing(actionTransitionTable, gotoTransitionTable,
-        stateStack, semanticStack, content, syntaxSetupCheck.lexicalProcessing, panicSet, sequencer, printWriter, translationContent, tempVariablesTranslationContent)
+        stateStack, semanticStack, content, syntaxSetupCheck.lexicalProcessing, panicSet, sequencer, translationContent, tempVariablesTranslationContent)
     }
 
     else{
@@ -118,7 +115,7 @@ object Parser {
 
         parserProcessing(actionTransitionTable, gotoTransitionTable,
           shiftState::stateStack, syntaxLexicalData.recognizedToken::semanticStack, content, updatedTokenData,
-          None, sequencer, printWriter, translationContent, tempVariablesTranslationContent)
+          None, sequencer, translationContent, tempVariablesTranslationContent)
       }
 
       //efetua uma redução
@@ -132,7 +129,7 @@ object Parser {
 
         //realiza verificação semântica
         val semanticInfo = SemanticOps.action(productionNumber.toInt,
-          nonTerminal, syntaxLexicalData, semanticStack
+          nonTerminal, syntaxLexicalData,  semanticStack
           , sequencer, syntaxLexicalData.updatedSymbolTable, translationContent, tempVariablesTranslationContent)
 
         //obtem o número de produções da regra...
@@ -161,12 +158,14 @@ object Parser {
         parserProcessing(actionTransitionTable, gotoTransitionTable,
           gotoState::newStateStack, semanticInfo.semanticStack,
           content, newsyntaxLexicalData,
-          None, semanticInfo.updatedSequencer, printWriter, semanticInfo.content, semanticInfo.tempContent)
+          None, semanticInfo.updatedSequencer, semanticInfo.content, semanticInfo.tempContent)
 
       }
 
       else if(action.startsWith("A")){
         println("\n\nAchou aceitacao!!");
+
+        val printWriter = new PrintWriter("/home/sabaodecoco/mgol-compiler/alg.c")
 
         printWriter.write("#include<stdio.h>\n")
         printWriter.write("\ntypedef char literal[256];\n")
@@ -178,7 +177,9 @@ object Parser {
         printWriter.write(tempVariablesTranslationContent)
         printWriter.write("\n\t/*variáveis convencionais*/\n")
         printWriter.write(translationContent)
-        println(s"\n ${syntaxLexicalData.updatedSymbolTable}")
+
+        printWriter.close()
+//        println(s"\n ${syntaxLexicalData.updatedSymbolTable}")
       }
 
       //rotina de erros (modo pânico).
@@ -189,7 +190,7 @@ object Parser {
                 s" Esperava um desses tokens: ${expectedTokens.mkString(", ")}")
         println("[[Iniciando modo pânico!...]]")
         parserProcessing(actionTransitionTable, gotoTransitionTable,
-          stateStack, semanticStack, content, syntaxLexicalData, Some(expectedTokens), sequencer, printWriter, translationContent, tempVariablesTranslationContent)
+          stateStack, semanticStack, content, syntaxLexicalData, Some(expectedTokens), sequencer, translationContent, tempVariablesTranslationContent)
       }
     }
 

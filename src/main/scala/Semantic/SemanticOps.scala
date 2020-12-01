@@ -1,7 +1,5 @@
 package Semantic
 
-import java.io.PrintWriter
-
 import Enum.Token
 import Lexical.Scanner.{LexicalProcessing, TokenAttribute}
 import Syntactic.Productions.NonTerminal
@@ -13,9 +11,9 @@ import scala.collection.immutable.HashMap
 object SemanticOps {
   case class SemanticInfo(semanticStack: List[Any], updatedSequencer: Int, updatedSymbolTable: SymbolTable, content:String, tempContent: String)
 
-  def action(state: Int, nonTerminal: NonTerminal, terminal: LexicalProcessing,
+  def action(productionNumber: Int, nonTerminal: NonTerminal, terminal: LexicalProcessing,
              semanticStack: List[Any], sequencer: Int, symbolTable: SymbolTable, content:String, tempContent: String): SemanticInfo = {
-    state match {
+    productionNumber match {
       case 2 =>
         val insertedContent = "\n}\n"
         SemanticInfo(semanticStack.empty, sequencer, symbolTable, content.concat(insertedContent), tempContent)
@@ -32,8 +30,6 @@ object SemanticOps {
 
         val nonTerminalInStack = semanticStack.find(element =>
           element.isInstanceOf[NonTerminal])
-
-//        println("this is the nonterminal in stack: " + nonTerminalInStack + '\n' + "and id token: " + idToken)
 
         //altere o tipo do id
         val updatedSymbolTable = {
@@ -79,20 +75,20 @@ object SemanticOps {
           element.isInstanceOf[TokenAttribute] &&
             element.asInstanceOf[TokenAttribute].classification.equals(Token.ID))
 
-        if(tokenWithIdClassification.isDefined && !tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type.isEmpty){
-          val tknType = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type
-          val tknLex = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex
-          val insertedContent = tknType match {
-            case "int" => "\tscanf(\"" + "%d\", &" + tknLex + ");\n"
-            case "real" => "\tscanf(\"" + "%lf\", &" + tknLex + ");\n"
-            case "literal" => "\tscanf(\"" + "%s\", " + tknLex + ");\n"
-          }
-          SemanticInfo(semanticStack.empty, sequencer, symbolTable, content.concat(insertedContent), tempContent)
-        }
-        else{
-          return null
+        if(tokenWithIdClassification.isDefined &&
+          tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type.isEmpty){
+          throw new Exception(s"[ERRO SEMÂNTICO] - Variável não declarada! ${terminal.line} : ${terminal.column}")
         }
 
+        val tknType = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type
+        val tknLex = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex
+        val insertedContent = tknType match {
+          case "int" => "\tscanf(\"" + "%d\", &" + tknLex + ");\n"
+          case "real" => "\tscanf(\"" + "%lf\", &" + tknLex + ");\n"
+          case "literal" => "\tscanf(\"" + "%s\", " + tknLex + ");\n"
+          case __ => throw new Exception(s"[ERRO SEMÂNTICO] - Variável não declarada! ${terminal.line} : ${terminal.column}")
+        }
+        SemanticInfo(semanticStack.empty, sequencer, symbolTable, content.concat(insertedContent), tempContent)
 
       case 12 =>
         val nonTerminalArg = semanticStack.find(element => element.isInstanceOf[NonTerminal])
@@ -114,12 +110,18 @@ object SemanticOps {
           element.isInstanceOf[TokenAttribute] &&
             element.asInstanceOf[TokenAttribute].classification.equals(Token.ID))
 
+        if(tokenWithIdClassification.isDefined &&
+          tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type.isEmpty){
+          throw new Exception(s"[ERRO SEMÂNTICO] - Variável não declarada! ${terminal.line} : ${terminal.column}")
+        }
+
         val tokenType = tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type
 
         val temporaryText: String = tokenType match{
           case "real" => "\"%lf\", " + tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex
           case "int" =>  "\"%d\", " + tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex
           case "literal" =>  "\"%s\", " + tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex
+          case __ => throw new Exception(s"[ERRO SEMÂNTICO] - Variável não declarada! ${terminal.line} : ${terminal.column}")
         }
 
         val updatedSemanticStack =
@@ -138,11 +140,11 @@ object SemanticOps {
 
         val symbolWithLDClassification = semanticStack.find(element => element.isInstanceOf[NonTerminal]).head
 
-        if(symbolWithLDClassification.asInstanceOf[NonTerminal]
+        if(!symbolWithLDClassification.asInstanceOf[NonTerminal]
           .multiAttributes.asInstanceOf[TokenAttribute].t_type
               .equals(
                 tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type)
-        ) println("su su sucesso!")
+        ) throw new Exception(s"[ERRO SEMÂNTICO] - Variável não declarada! ${terminal.line} : ${terminal.column}")
 
         val insertedContent = s"\t${tokenWithIdClassification.get.asInstanceOf[TokenAttribute].lex} = " +
           s"${symbolWithLDClassification.asInstanceOf[NonTerminal].multiAttributes.asInstanceOf[TokenAttribute].lex};\n"
@@ -152,11 +154,17 @@ object SemanticOps {
 
 
       case 18 =>
-        //symbols with OPRD classification
+        //simbolos com classificação oprd em ordem de inserção
         val symbolsWithOPRDClassification = semanticStack.filter(element =>
           element.isInstanceOf[NonTerminal]).reverse
 
-        //obtém o operador matemático
+        val equalTypes = symbolsWithOPRDClassification.reduce((a, b) => a.asInstanceOf[NonTerminal]
+                    .multiAttributes.asInstanceOf[TokenAttribute].t_type
+                    .equals(b.asInstanceOf[NonTerminal].multiAttributes.asInstanceOf[TokenAttribute].t_type)).asInstanceOf[Boolean]
+
+        if(!equalTypes)
+          throw new Exception(s"[ERRO SEMÂNTICO] - Operandos com tipos incompatíveis! ${terminal.line} : ${terminal.column}")
+
         val tokenWithOPMClassification = semanticStack.find(element =>
           element.isInstanceOf[TokenAttribute] && element.asInstanceOf[TokenAttribute].classification.equals(Token.MATH_OPERATOR))
 
@@ -169,15 +177,15 @@ object SemanticOps {
           .mkString(tokenWithOPMClassification.get.asInstanceOf[TokenAttribute].t_type) + "";
 
         val insertedContent = s"\t${temporaryExpression};\n"
+
         val insertedTempVariable = s"\t" + symbolsWithOPRDClassification.
           head.asInstanceOf[NonTerminal].multiAttributes.asInstanceOf[TokenAttribute].t_type + s" T$sequencer;\n"
 
         val updatedSemanticStack =
           NonTerminal(nonTerminal.lhs, nonTerminal.rhs,
             nonTerminal.singleAttribute,
-            TokenAttribute(lex = s"T$sequencer",
-              Token.ID,
-              symbolsWithOPRDClassification.head.asInstanceOf[NonTerminal].multiAttributes.asInstanceOf[TokenAttribute].t_type))::semanticStack
+            TokenAttribute(lex = s"T$sequencer", Token.ID, symbolsWithOPRDClassification.head.asInstanceOf[NonTerminal].multiAttributes.asInstanceOf[TokenAttribute].t_type)
+          )::semanticStack
 
         SemanticInfo(updatedSemanticStack, sequencer + 1, symbolTable, content.concat(insertedContent), tempContent.concat(insertedTempVariable))
 
@@ -195,16 +203,13 @@ object SemanticOps {
             element.asInstanceOf[TokenAttribute].classification.equals(Token.ID))
 
         if(tokenWithIdClassification.isDefined && !tokenWithIdClassification.get.asInstanceOf[TokenAttribute].t_type.isEmpty){
-          println("Instancia ok!")
-
           val updatedSemanticStack =
-            NonTerminal(nonTerminal.lhs, nonTerminal.rhs, nonTerminal.singleAttribute, tokenWithIdClassification.get.asInstanceOf[TokenAttribute])::semanticStack
+            NonTerminal(nonTerminal.lhs, nonTerminal.rhs, nonTerminal.singleAttribute, tokenWithIdClassification.get.asInstanceOf[TokenAttribute])::semanticStack.drop(1)
 
           SemanticInfo(updatedSemanticStack, sequencer, symbolTable, content, tempContent)
         }
         else
-          //todo LANÇAR EXCEÇÃO
-          return null
+          throw new Exception(s"[ERRO SEMÂNTICO] - Variável não declarada! ${terminal.line} : ${terminal.column}")
 
       case 21 =>
         val tokenWithNumClassification = semanticStack.head
@@ -230,6 +235,13 @@ object SemanticOps {
         //obtém os operadores na ordem de inserção
         val symbolsWithOPRDClassification = semanticStack.filter(element =>
           element.isInstanceOf[NonTerminal]).reverse
+
+        val equalTypes = symbolsWithOPRDClassification.reduce((a, b) => a.asInstanceOf[NonTerminal]
+          .multiAttributes.asInstanceOf[TokenAttribute].t_type
+          .equals(b.asInstanceOf[NonTerminal].multiAttributes.asInstanceOf[TokenAttribute].t_type)).asInstanceOf[Boolean]
+
+        if(!equalTypes)
+          throw new Exception(s"[ERRO SEMÂNTICO] - Operandos com tipos incompatíveis! ${terminal.line} : ${terminal.column}")
 
         //obtém o operador relacional
         val tokenWithOPRClassification = semanticStack.find(element =>
