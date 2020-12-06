@@ -165,12 +165,11 @@ object Parser {
       else if(action.startsWith("A")){
         println("\n\nAchou aceitacao!!");
 
-        val printWriter = new PrintWriter("/home/sabaodecoco/mgol-compiler/alg.c")
+        val printWriter = new PrintWriter("alg.c")
 
         printWriter.write("#include<stdio.h>\n")
         printWriter.write("\ntypedef char literal[256];\n")
-        printWriter.write("typedef double real;\n")
-        printWriter.write("typedef int inteiro;\n\n")
+        printWriter.write("typedef double real;\n\n")
         printWriter.write("void main(void){\n")
 
         printWriter.write("\t/*variáveis temporárias*/\n")
